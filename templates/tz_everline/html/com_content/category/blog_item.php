@@ -20,7 +20,7 @@ $useDefList = ($params->get('show_modify_date') || $params->get('show_publish_da
 $document = JFactory::getDocument();
 // Post Format
 $post_attribs = new JRegistry(json_decode($this->item->attribs));
-$post_format = $post_attribs->get('post_format', 'standard');
+$post_format = $post_attribs->get('astroid_article_type', 'standard');
 ?>
 <?php if ($this->item->state == 0 || strtotime($this->item->publish_up) > strtotime(JFactory::getDate()) || ((strtotime($this->item->publish_down) < strtotime(JFactory::getDate())) && $this->item->publish_down != JFactory::getDbo()->getNullDate())) :
    ?>
@@ -30,7 +30,9 @@ $post_format = $post_attribs->get('post_format', 'standard');
    if ($post_format == 'standard') {
       echo JLayoutHelper::render('joomla.content.intro_image', $this->item);
    } else {
-      echo JLayoutHelper::render('joomla.content.post_formats.post_' . $post_format, array('params' => $post_attribs, 'item' => $this->item));
+       echo '<div class="post '.$post_format.'">';
+       $astroidArticle->render();
+       echo '</div>';
    }
    $image = $astroidArticle->getImage();
    if (is_string($image) && !empty($image)) {
@@ -38,26 +40,8 @@ $post_format = $post_attribs->get('post_format', 'standard');
    }
    $astroid_article_badge = $template->params->get('astroid_article_badge', 1) ? ($astroidArticle->article->params->get('astroid_article_badge', 0) ? 1 : 0) : 0;
    ?>
-   <div class="card-body<?php echo $tpl_params->get('show_post_format') ? ' has-post-format' : ''; ?><?php echo $astroid_article_badge ? ' has-badge' : ''; ?><?php echo (!empty($image) ? ' has-image' : ''); ?>">
-      <?php if ($template->params->get('astroid_badge', 1)) { ?>
-         <?php if ($astroidArticle->article->params->get('astroid_article_badge', 0)) { ?>
-            <?php
-            if ($astroidArticle->article->params->get('astroid_article_badge_type', 2) == 1) {
-               $style = '.article-badge.article-badge-custom.article-id-'.$this->item->id.':after{ border-left-color: ' . $astroidArticle->article->params->get('astroid_article_badge_color', '#000'). '} .article-badge.article-badge-custom.article-id-'.$this->item->id.':before{ border-bottom-color: ' . $astroidArticle->article->params->get('astroid_article_badge_color', '#000'). '; }';
-               $document->addStyleDeclaration($style);
-               ?>
-               <div style="background: <?php echo $astroidArticle->article->params->get('astroid_article_badge_color', '#000'); ?>; color: <?php echo $astroidArticle->article->params->get('astroid_article_badge_text_color', '#000'); ?>" class="article-badge article-badge-<?php 
-			   if($astroidArticle->article->params->get('astroid_article_badge_type', 2) == 1){
-						echo 'custom article-id-'.$this->item->id;
-				   } else {
-						echo $astroidArticle->article->params->get('astroid_article_badge_type', 2);
-					}
-				?>"><?php echo JText::_($astroidArticle->article->params->get('astroid_article_badge_text', '')); ?></div>
-            <?php } else { ?>
-               <div class="article-badge article-badge-<?php echo $astroidArticle->article->params->get('astroid_article_badge_type', 2); ?>"><?php echo JText::_('ASTROID_ARTICLE_OPTIONS_BADGE_' . ($astroidArticle->article->params->get('astroid_article_badge_type', 2)) . '_LBL'); ?></div>
-            <?php } ?>
-         <?php } ?>
-      <?php } ?>
+   <div class="card-body<?php echo $tpl_params->get('show_post_format') ? ' has-post-format' : ''; ?><?php echo (!empty($image) ? ' has-image' : ''); ?>">
+      <?php $astroidArticle->renderArticleBadge(); ?>
       <div class="article-title item-title">
          <?php echo JLayoutHelper::render('joomla.content.blog_style_default_item_title', $this->item); ?>
       </div>
@@ -68,7 +52,8 @@ $post_format = $post_attribs->get('post_format', 'standard');
       <div class="article-intro-text"><?php echo $this->item->introtext; ?></div>
       <?php if ($info == 1 || $info == 2) : ?>
          <?php if ($useDefList) : ?>
-            <?php // Todo: for Joomla4 joomla.content.info_block.block can be changed to joomla.content.info_block ?>
+            <?php // Todo: for Joomla4 joomla.content.info_block.block can be changed to joomla.content.info_block
+                  ?>
             <?php echo JLayoutHelper::render('joomla.content.info_block.block', array('item' => $this->item, 'params' => $params, 'astroidArticle' => $astroidArticle, 'position' => 'below')); ?>
          <?php endif; ?>
       <?php endif; ?>
