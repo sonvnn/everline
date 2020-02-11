@@ -104,8 +104,13 @@ class EasySocialViewSearch extends EasySocialSiteView
 		$searchConfig['match'] = $match;
 		$searchConfig['avatarOnly'] = $avatarOnly;
 		$searchConfig['onlineOnly'] = $onlineOnly;
+
+		// these two are used in custom field search module.
 		$searchConfig['profile'] = $profile;
 		$searchConfig['clusterCategoryIds'] = $clusterCategory;
+
+		// normalize user search data.
+		$searchConfig = $helper->normalizeUserData($searchConfig);
 
 		$routerSegment = array();
 		$routerSegment['layout'] = 'advanced';

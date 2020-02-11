@@ -1,7 +1,7 @@
 <?php
 /**
 * @package		EasySocial
-* @copyright	Copyright (C) 2010 - 2014 Stack Ideas Sdn Bhd. All rights reserved.
+* @copyright	Copyright (C) 2010 - 2020 Stack Ideas Sdn Bhd. All rights reserved.
 * @license		GNU/GPL, see LICENSE.php
 * EasySocial is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
@@ -9,15 +9,10 @@
 * other free or open source software licenses.
 * See COPYRIGHT.php for copyright notices and details.
 */
-defined( '_JEXEC' ) or die( 'Unauthorized Access' );
+defined('_JEXEC') or die('Unauthorized Access');
 
 class GroupLinksHelper
 {
-	public function __construct()
-	{
-		parent::__construct();
-	}
-
 	/**
 	 * Processes videos
 	 *
@@ -26,9 +21,9 @@ class GroupLinksHelper
 	 * @param	string
 	 * @return
 	 */
-	public static function processVideos( $url )
+	public static function processVideos($url)
 	{
-		$output 	= self::getVideoHtml( $url );
+		$output = self::getVideoHtml($url);
 
 		return $output;
 	}
@@ -41,13 +36,13 @@ class GroupLinksHelper
 	 * @param	string
 	 * @return
 	 */
-	public static function getVideoHtml( $url )
+	public static function getVideoHtml($url)
 	{
-		$provider 	= self::getVideoProvider( $url );
+		$provider = self::getVideoProvider($url);
 
-		$theme 	= FD::themes();
-		$theme->set( 'url'	, $url );
-		$output = $theme->output( 'themes:/apps/user/links/videos/' . $provider );
+		$theme = ES::themes();
+		$theme->set('url', $url);
+		$output = $theme->output('themes:/apps/user/links/videos/' . $provider);
 
 		return $output;
 	}
@@ -60,32 +55,31 @@ class GroupLinksHelper
 	 * @param	string
 	 * @return
 	 */
-	public static function getVideoProvider( $video )
+	public static function getVideoProvider($video)
 	{
-		$providers 	= array(
-							'youtube.com'		=> 'youtube',
-							'youtu.be'			=> 'youtube',
-							'vimeo.com'			=> 'vimeo',
-							'yahoo.com'			=> 'yahoo',
-							'metacafe.com'		=> 'metacafe',
-							'google.com'		=> 'google',
-							'mtv.com'			=> 'mtv',
-							'liveleak.com'		=> 'liveleak',
-							'revver.com'		=> 'revver',
-							'dailymotion.com'	=> 'dailymotion'
+		$providers = array(
+							'youtube.com' => 'youtube',
+							'youtu.be' => 'youtube',
+							'vimeo.com' => 'vimeo',
+							'yahoo.com'	=> 'yahoo',
+							'metacafe.com' => 'metacafe',
+							'google.com' => 'google',
+							'mtv.com' => 'mtv',
+							'liveleak.com' => 'liveleak',
+							'revver.com' => 'revver',
+							'dailymotion.com' => 'dailymotion'
 						);
 
-		preg_match( '/http\:\/\/(.*)\//i' , $video , $matches );
-		$url	= $matches[0];
-		$url	= parse_url( $url );
-		$url	= explode( '.' , $url[ 'host' ] );
+		preg_match('/http\:\/\/(.*)\//i', $video, $matches);
+		$url = $matches[0];
+		$url = parse_url($url);
+		$url = explode('.', $url['host']);
 
 		// Last two parts will always be the domain name.
-		$url	= $url[ count( $url ) - 2 ] . '.' . $url[ count( $url ) - 1 ];
+		$url = $url[count($url) - 2] . '.' . $url[count($url) - 1];
 
-		if( !empty( $url ) && array_key_exists( $url , $providers ) )
-		{
-			$provider 	=  $providers[ $url ];
+		if (!empty($url) && array_key_exists($url, $providers))	{
+			$provider = $providers[$url];
 
 			return $provider;
 		}

@@ -482,8 +482,7 @@ class EasyDiscussRouter extends EasyDiscuss
 
 		// We know that the view=categories&layout=listings&id=xxx because there's only 1 segment
 		// and the active menu is view=categories
-		
-		// var_dump($segments);
+
 
 		if (isset($item) && $item->query['view'] == 'categories' && count($segments) >= 1 && !in_array($segments[0], $views) ) {
 
@@ -521,6 +520,7 @@ class EasyDiscussRouter extends EasyDiscuss
 				$catAliases = $model->getCategoryPermalinks();
 				$tagAliass = $model->getTagPermalinks();
 
+
 				$testItem = JString::str_ireplace(':', '-', $segments[$numSegments - 1]);
 				$testFirstItem = JString::str_ireplace(':', '-', $segments[0]);
 
@@ -531,6 +531,7 @@ class EasyDiscussRouter extends EasyDiscuss
 					array_unshift($segments, 'tags');
 
 				} else {
+
 
 					// if the current active menu item is pointing to below views, means we now the current url most likely is a post url.
 					// thus, we need to exclude these views for later checking.
@@ -555,9 +556,20 @@ class EasyDiscussRouter extends EasyDiscuss
 
 					} else {
 
+						// the last segment could be a post's reply sortings.
+						if (in_array($segments[count($segments) - 1], $repliesSorting)) {
+							$testItem = $segments[count($segments) - 2];
+						}
 
-						$postId = EDR::decodeAlias($testFirstItem, 'Post');
-						$postId = (int) $postId;
+						if ($config->get('main_sef') == 'simple') {
+							$postId = EDR::decodeAlias($testFirstItem, 'Post');
+							$postId = (int) $postId;
+						}
+
+						if ($config->get('main_sef') == 'category') {
+							$postId = EDR::decodeAlias($testItem, 'Post');
+							$postId = (int) $postId;
+						}
 
 						if ($postId !== 0) {
 							array_unshift($segments, 'post');
@@ -594,8 +606,7 @@ class EasyDiscussRouter extends EasyDiscuss
 
 			// second elements
 			if (in_array($segments[count($segments) - 1], $repliesSorting)) {
-				$idx = 1;
-
+				$idx = $count - 2; // second last segment
 				$vars['sort'] = $segments[count($segments) - 1];
 			}
 
@@ -622,7 +633,6 @@ class EasyDiscussRouter extends EasyDiscuss
 			if ($postId) {
 				$vars['id'] = $postId;
 			}
-
 
 			$vars['view'] = 'post';
 		}

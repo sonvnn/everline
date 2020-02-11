@@ -98,7 +98,7 @@ defined('_JEXEC') or die('Unauthorized Access');
 									</div>
 								</div>
 								<div class="o-grid-sm__cell o-grid-sm__cell--right">
-									<button type="submit" class="btn btn-es-primary-o"><i class="fa fa-lock"></i>&nbsp; <?php echo JText::_('COM_EASYSOCIAL_LOGIN_BUTTON');?></button>
+									<button type="submit" class="btn btn-es-primary-o" data-login-submit><i class="fa fa-lock"></i>&nbsp; <?php echo JText::_('COM_EASYSOCIAL_LOGIN_BUTTON');?></button>
 								</div>
 							</div>
 

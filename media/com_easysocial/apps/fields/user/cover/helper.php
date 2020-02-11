@@ -143,4 +143,14 @@ class SocialFieldsUserCoverHelper
 
 		return $path;
 	}
+
+	public static function getStorageURI($inputName)
+	{
+		$session = JFactory::getSession();
+		$uid = md5($session->getId() . $inputName);
+
+		$uri = rtrim(JURI::root() , '/') . '/media/com_easysocial/tmp/' . $uid . '_cover';
+
+		return $uri;
+	}
 }

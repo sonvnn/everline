@@ -554,11 +554,21 @@ class SocialFieldsUserAvatar extends SocialFieldItem
 		}
 
 		if ($value->type === 'upload') {
+
 			$data = new stdClass();
 
 			if (!empty($value->path)) {
+				// Get the media tmp path. Pass false so that the path wont get overwritten
+				$storagePath = SocialFieldsUserAvatarHelper::getStoragePath($this->inputName, false);
+				$tmpPath = $storagePath . '/' . $value->path;
+
 				$image = ES::image();
-				$image->load($value->path);
+				$image->load($tmpPath);
+
+				if (!$image->isValid()) {
+					$this->setError(JText::_('PLG_FIELDS_AVATAR_ERROR_INVALID_FILE'));
+					return false;
+				}
 
 				$avatar	= ES::avatar($image, $uid, $this->group);
 
@@ -647,7 +657,7 @@ class SocialFieldsUserAvatar extends SocialFieldItem
 					$options = array( 'addstream' => false );
 				}
 
-				$tmpPath = dirname($value->path);
+				$tmpPath = dirname($tmpPath);
 
 				$options['deleteimage'] = false;
 

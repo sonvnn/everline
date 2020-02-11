@@ -546,6 +546,23 @@ class EasySocialControllerPhotos extends EasySocialController
 			return $this->view->call(__FUNCTION__);
 		}
 
+		// Retrieve the photo album data currently editing
+		$albumItem = $photo->getAlbum();
+		$isEditingCurrentAvatar = false;
+
+		// Ensure that user editing the avatar photo currently using it.
+		if ($albumItem->isAvatar()) {
+
+			// Load the editing photo album id
+			$albumTbl = ES::table('Album');
+			$albumExist = $albumTbl->load($albumItem->id);
+
+			if ($albumExist) {
+				$avatarModel = ES::model('avatars');
+				$isEditingCurrentAvatar = $avatarModel->isEditingCurrentAvatar($albumTbl->uid, $photo->id, $photo->type);
+			}
+		}
+
 		// here we need to check if the current photo are stored in amazon. if yes, lets download back to server
 		// for further processing.
 		if ($photo->storage != SOCIAL_STORAGE_JOOMLA) {
@@ -557,7 +574,6 @@ class EasySocialControllerPhotos extends EasySocialController
 			$storage = ES::storage($photo->storage);
 			$storage->pull($photoFolder);
 		}
-
 
 		// Rotate photo
 		$tmpAngle = $this->input->get('angle', 0, 'int');
@@ -619,6 +635,25 @@ class EasySocialControllerPhotos extends EasySocialController
 		// we will need to re-upload the image again to remote server when synchroinization happens.
 		$newPhoto->storage = SOCIAL_STORAGE_JOOMLA;
 		$newPhoto->store();
+
+		// Ensure that user editing his current user avatar image then only process this.
+		if ($isEditingCurrentAvatar) {
+
+			// Rotated image
+			$rotatedImage = $newPhoto->getPath('original', false, true);
+
+			$image = ES::image();
+			$image->load($rotatedImage);
+
+			// Load up the avatar library
+			$avatar = ES::avatar($image, $newPhoto->uid, $newPhoto->type);
+
+			// since this rotate process do not allow user to crop so do not need to specify any width/height for it.
+			$avatar->crop();
+
+			// Create the avatars now
+			$avatar->store($newPhoto, array('addstream' => false));
+		}
 
 		return $this->view->call(__FUNCTION__, $newPhoto, $paths);
 	}

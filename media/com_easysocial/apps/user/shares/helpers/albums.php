@@ -1,7 +1,7 @@
 <?php
 /**
 * @package		EasySocial
-* @copyright	Copyright (C) 2010 - 2016 Stack Ideas Sdn Bhd. All rights reserved.
+* @copyright	Copyright (C) 2010 - 2020 Stack Ideas Sdn Bhd. All rights reserved.
 * @license		GNU/GPL, see LICENSE.php
 * EasySocial is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
@@ -23,10 +23,13 @@ class SocialSharesHelperAlbums extends SocialSharesHelper
 	 */
 	public function getContent()
 	{
-		$message = $this->formatContent($this->share->content);
-
 		// Load the album object
 		$album = $this->getSource();
+
+		// Album is no longer exists. #3737
+		if (!$album->id) {
+			return false;
+		}
 
 		// Determines if the current user is allowed to view
 		$privacy = $this->my->getPrivacy();
@@ -34,6 +37,8 @@ class SocialSharesHelperAlbums extends SocialSharesHelper
 		if (!$privacy->validate('albums.view', $album->id, SOCIAL_TYPE_ALBUM, $album->user_id)) {
 			return $this->restricted();
 		}
+
+		$message = $this->formatContent($this->share->content);
 
 		$theme = ES::themes();
 		$theme->set('album', $album);

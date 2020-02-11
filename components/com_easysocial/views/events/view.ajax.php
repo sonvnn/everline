@@ -1288,13 +1288,14 @@ class EasySocialViewEvents extends EasySocialSiteView
 			$theme->set('uid', $uid);
 			$theme->set('event', $event);
 			$theme->set('return', $return);
+			$theme->set('isMember', $guest->isMember());
 
 			$contents = $theme->output('site/events/dialogs/promote');
 
 			return $this->ajax->resolve($contents);
 		}
 
-		return $this->ajax->resolve($theme->output('site/events/dialogs/error'));
+		return $this->ajax->resolve($theme->output('site/events/dialogs/dialog.guest.error'));
 	}
 
 	/**

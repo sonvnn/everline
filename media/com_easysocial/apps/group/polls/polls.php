@@ -534,7 +534,8 @@ class SocialGroupAppPolls extends SocialAppItem
 
 		$group = ES::group($polls->cluster_id);
 
-		$commentContent = ES::string()->parseEmoticons($comment->comment);
+		$parseBBCodeOptions = array('escape' => false, 'links' => true, 'code' => true);
+		$commentContent = ES::string()->normalizeContent($comment->comment, $parseBBCodeOptions);
 
 		// Prepare the email params
 		$mailParams = array();

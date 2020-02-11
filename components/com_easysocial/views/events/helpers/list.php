@@ -205,6 +205,15 @@ class EasySocialViewEventsListHelper extends EasySocial
 		// If not browse view, we default the filter to 'created'
 		if (!$browseView) {
 			$filter = $filter != 'all' ? $filter : 'created';
+
+			$userid = $this->getActiveUserId();
+			if ($filter == 'created' && $userid) {
+				// check if this user has create event acl granted or not.
+				$user = ES::user($userid);
+				if (!$user->canCreateEvents()) {
+					$filter = 'participated';
+				}
+			}
 		}
 
 		return $filter;
@@ -277,7 +286,7 @@ class EasySocialViewEventsListHelper extends EasySocial
 
 			$filtersLink->all = ES::event()->getFilterPermalink(array_merge(array('filter' => 'all'), $linkOptions));
 			$filtersLink->featured = ES::event()->getFilterPermalink(array_merge(array('filter' => 'featured'), $linkOptions));
-			$filtersLink->pending = ES::event()->getFilterPermalink(array_merge(array('filter' => 'pending'), $linkOptions));
+			$filtersLink->pending = ES::event()->getFilterPermalink(array_merge(array('filter' => 'review'), $linkOptions));
 			$filtersLink->invited = ES::event()->getFilterPermalink(array_merge(array('filter' => 'invited'), $linkOptions));
 			$filtersLink->created = ES::event()->getFilterPermalink(array_merge(array('filter' => 'created'), $linkOptions));
 			$filtersLink->participated = ES::event()->getFilterPermalink(array_merge(array('filter' => 'participated'), $linkOptions));
@@ -429,7 +438,11 @@ class EasySocialViewEventsListHelper extends EasySocial
 		if (is_null($filter)) {
 			// If we are viewing profile's page listing
 			// Default the $filter to 'created'
-			$filter = $this->isBrowseView() ? 'all' : 'created';
+			if ($this->getActiveUser()->canCreateEvents()) { 
+				$filter = $this->isBrowseView() ? 'all' : 'created';
+			} else {
+				$filter = $this->isBrowseView() ? 'all' : 'participated';
+			}
 		}
 
 		return $filter;

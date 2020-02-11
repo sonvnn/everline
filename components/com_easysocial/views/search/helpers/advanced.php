@@ -185,4 +185,83 @@ class EasySocialViewSearchAdvancedHelper extends EasySocial
 
 		return $filters;
 	}
+
+	/**
+	 * Normalise user search data filters.
+	 *
+	 * @since	3.2.5
+	 * @access	public
+	 */
+	public function normalizeUserData($searchConfig)
+	{
+		$profile = $this->input->get('profile', 0, 'int');
+		$clusterCategory = $this->input->get('clusterCategory', 0, 'int');
+
+		$newSearchConfig = $searchConfig;
+
+		// these two are used in custom field search module.
+		if ($profile || $clusterCategory) {
+
+			$criterias = $searchConfig['criterias'];
+			$datakeys = $searchConfig['datakeys'];
+			$operators = $searchConfig['operators'];
+			$conditions = $searchConfig['conditions'];
+
+			$total = count($criterias);
+
+			$newItems = array('criterias' => array(),
+							'datakeys' => array(),
+							'operators' => array(),
+							'conditions' => array()
+						);
+
+			if ($total > 0) {
+				for($i = 0; $i < $total; $i++) {
+					$criteria = explode('|', $criterias[$i]);
+					$operator = $operators[$i];
+					$datakey = $datakeys[$i];
+					$cond = $conditions[$i];
+
+					$fcode = $criteria[0];
+					$ftype = $criteria[1];
+
+					// $allowBlankOperators = array('blank', 'notblank', 'notequal', 'notcontain');
+					$allowBlankOperators = array('blank', 'notblank');
+
+					// if (($ftype == 'boolean' && $operator == 'equal' && $cond === '') || 
+					// 	($ftype != 'boolean' && !in_array($operator, $allowBlankOperators) && $cond === '')) {
+					// 	continue;
+					// }
+
+					if ($cond === '') {
+						continue;
+					}
+
+					if ($ftype == 'checkbox' && $cond && strpos($cond, '|') !== false) {
+						// we need to split the values and add a criteria for each of the condition.
+						$arrConds = explode('|', $cond);
+
+						for($c = 0; $c < count($arrConds); $c++) {
+							$newItems['criterias'][] = $criterias[$i];
+							$newItems['datakeys'][] = $datakeys[$i];
+							$newItems['operators'][] = $operators[$i];
+							$newItems['conditions'][] = $arrConds[$c];
+						}
+					} else {
+						$newItems['criterias'][] = $criterias[$i];
+						$newItems['datakeys'][] = $datakeys[$i];
+						$newItems['operators'][] = $operators[$i];
+						$newItems['conditions'][] = $conditions[$i];
+					}
+				}
+
+				$newSearchConfig['criterias'] = $newItems['criterias'];
+				$newSearchConfig['datakeys'] = $newItems['datakeys'];
+				$newSearchConfig['operators'] = $newItems['operators'];
+				$newSearchConfig['conditions'] = $newItems['conditions'];
+			}
+		}
+
+		return $newSearchConfig;
+	}
 }

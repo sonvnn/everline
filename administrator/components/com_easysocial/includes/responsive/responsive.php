@@ -54,7 +54,7 @@ class SocialResponsive extends EasySocial
 		'INQ'           => 'INQ',
 		// @Tapatalk is a mobile app; http://support.tapatalk.com/threads/smf-2-0-2-os-and-browser-detection-plugin-and-tapatalk.15565/#post-79039
 		'GenericPhone'  => 'Tapatalk|PDA;|SAGEM|\bmmp\b|pocket|\bpsp\b|symbian|Smartphone|smartfon|treo|up.browser|up.link|vodafone|\bwap\b|nokia|Series40|Series60|S60|SonyEricsson|N900|MAUI.*WAP.*Browser',
-		'Android'       => 'Linux; Android.*|Android; Opera Mini.*|Linux; U; Android.*',
+		'Android'       => 'Linux; Android.*|Android; Opera Mini.*|Linux; U; Android.*|Linux; arm_64; Android.*',
 		'FirefoxMobile' => 'Android.*; Mobile;|Mobile; Windows Phone.*|BB10; Touch',
 		'OperaMobile'   => '(Android|Windows Phone); Opera Mini.*'
 	);
@@ -547,3 +547,4 @@ class SocialResponsive extends EasySocial
 		return $isTablet;
 	}
 }
+

@@ -1,7 +1,7 @@
 <?php
 /**
 * @package		EasySocial
-* @copyright	Copyright (C) 2010 - 2016 Stack Ideas Sdn Bhd. All rights reserved.
+* @copyright	Copyright (C) 2010 - 2020 Stack Ideas Sdn Bhd. All rights reserved.
 * @license		GNU/GPL, see LICENSE.php
 * EasySocial is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
@@ -23,10 +23,16 @@ class SocialSharesHelperPhotos extends SocialSharesHelper
 	 */
 	public function getContent()
 	{
+		// Load the photo object
+		$photo = $this->getSource();
+
+		if (!$photo->id) {
+			return false;
+		}
+
 		$message = $this->formatContent($this->share->content);
 
 		$photoMessage = '';
-
 
 		$params = ES::registry($this->share->params);
 		$streamId = $params->get('streamId', '');
@@ -37,9 +43,6 @@ class SocialSharesHelperPhotos extends SocialSharesHelper
 
 			$photoMessage = $this->formatContent($tbl->content);
 		}
-
-		// Load the photo object
-		$photo = $this->getSource();
 
 		// Determines if the current user is allowed to view
 		$privacy = $this->my->getPrivacy();

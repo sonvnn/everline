@@ -11,61 +11,61 @@
 */
 defined('_JEXEC') or die('Unauthorized Access');
 
-FD::import('fields:/user/avatar/ajax');
+ES::import('fields:/user/avatar/ajax');
 
 class SocialFieldsEventAvatar extends SocialFieldsUserAvatar
 {
-    public function upload()
-    {
-        // Get the ajax library
-        $ajax       = FD::ajax();
+	public function upload()
+	{
+		// Get the ajax library
+		$ajax = ES::ajax();
 
-        // Get the file
-        $tmp        = JRequest::getVar($this->inputName, '', 'FILES');
+		// Get the file
+		$tmp = JRequest::getVar($this->inputName, '', 'FILES');
 
-        $file       = array();
-        foreach ($tmp as $k => $v) {
-            $file[$k] = $v['file'];
-        }
+		$file = array();
+		foreach ($tmp as $k => $v) {
+			$file[$k] = $v['file'];
+		}
 
-        // Check if it is a valid file
-        if (empty($file['tmp_name'])) {
-            return $ajax->reject(JText::_('PLG_FIELDS_AVATAR_ERROR_INVALID_FILE'));
-        }
+		// Check if it is a valid file
+		if (empty($file['tmp_name'])) {
+			return $ajax->reject(JText::_('PLG_FIELDS_AVATAR_ERROR_INVALID_FILE'));
+		}
 
-        // Get user access
-        $access = FD::access($this->uid , SOCIAL_TYPE_CLUSTERS);
+		// Get user access
+		$access = ES::access($this->uid , SOCIAL_TYPE_CLUSTERS);
 
-        // We need to perform sanity checking here
-        $options = array('name' => $this->inputName, 'maxsize' => $access->get('photos.maxsize') . 'M', 'multiple' => true);
+		// We need to perform sanity checking here
+		$options = array('name' => $this->inputName, 'maxsize' => $access->get('photos.maxsize') . 'M', 'multiple' => true);
 
-        $uploader = ES::uploader($options);
-        $file = $uploader->getFile(null, 'image');
+		$uploader = ES::uploader($options);
+		$file = $uploader->getFile(null, 'image');
 
-        // If there was an error getting uploaded file, stop.
-        if ($file instanceof SocialException) {
-            return $ajax->reject($file->message);
-        }
+		// If there was an error getting uploaded file, stop.
+		if ($file instanceof SocialException) {
+			return $ajax->reject($file->message);
+		}
 
-        // Load up the image library so we can get the appropriate extension
-        $image  = FD::image();
-        $image->load($file['tmp_name']);
+		// Load up the image library so we can get the appropriate extension
+		$image  = ES::image();
+		$image->load($file['tmp_name']);
 
-        // Copy this to temporary location first
-        $tmpPath    = SocialFieldsUserAvatarHelper::getStoragePath($this->inputName);
-        $tmpName    = md5($file['name'] . $this->inputName . FD::date()->toMySQL()) . $image->getExtension();
+		// Copy this to temporary location first
+		$tmpPath = SocialFieldsUserAvatarHelper::getStoragePath($this->inputName);
+		$tmpName = md5($file['name'] . $this->inputName . ES::date()->toMySQL()) . $image->getExtension();
 
-        $source     = $file['tmp_name'];
-        $target     = $tmpPath . '/' . $tmpName;
-        $state      = JFile::copy($source, $target);
+		$source = $file['tmp_name'];
+		$target = $tmpPath . '/' . $tmpName;
+		$state = JFile::copy($source, $target);
 
-        if (!$state) {
-            return $ajax->reject(JText::_('PLG_FIELDS_AVATAR_ERROR_UNABLE_TO_MOVE_FILE'));
-        }
+		if (!$state) {
+			return $ajax->reject(JText::_('PLG_FIELDS_AVATAR_ERROR_UNABLE_TO_MOVE_FILE'));
+		}
 
-        $tmpUri     = SocialFieldsUserAvatarHelper::getStorageURI($this->inputName);
-        $uri        = $tmpUri . '/' . $tmpName;
+		$tmpUri = SocialFieldsUserAvatarHelper::getStorageURI($this->inputName);
+		$uri = $tmpUri . '/' . $tmpName;
 
-        return $ajax->resolve($file, $uri, $target);
-    }
+		return $ajax->resolve($file['name'], $uri, $tmpName);
+	}
 }

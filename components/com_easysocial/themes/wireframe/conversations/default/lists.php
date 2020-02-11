@@ -16,7 +16,7 @@ defined('_JEXEC') or die('Unauthorized Access');
 		<div class="es-convo__sidebar-item
 			<?php echo $list->isNew() ? ' is-unread' : '';?>
 			<?php echo $list->isArchived() ? ' is-archived' : '';?>
-			<?php echo $list->id == $activeConversation->id ? ' is-active' : '';?>"
+			<?php echo $list->id == ($activeConversation && $activeConversation->id) ? ' is-active' : '';?>"
 			data-es-item
 			data-item
 			data-id="<?php echo $list->id;?>"

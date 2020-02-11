@@ -1,7 +1,7 @@
 <?php
 /**
 * @package		EasySocial
-* @copyright	Copyright (C) 2010 - 2017 Stack Ideas Sdn Bhd. All rights reserved.
+* @copyright	Copyright (C) 2010 - 2020 Stack Ideas Sdn Bhd. All rights reserved.
 * @license		GNU/GPL, see LICENSE.php
 * EasySocial is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
@@ -147,31 +147,28 @@ class SocialExplorerHookGroup extends SocialExplorerHooks
 	 * @param	string
 	 * @return
 	 */
-	public function removeFolder( $id = null )
+	public function removeFolder($id = null)
 	{
+		$id = is_null($id) ? JRequest::getInt('id') : $id;
+
+		if (!$id) {
+			return ES::exception(JText::_('COM_EASYSOCIAL_EXPLORER_INVALID_FOLDER_ID_PROVIDED'));
+		}
+
+		$collection = ES::table('FileCollection');
+		$collection->load($id);
+
 		// Check if the user has access to delete files from this group
-		if( !$this->group->isMember() )
-		{
-			return FD::exception( JText::_( 'COM_EASYSOCIAL_EXPLORER_NO_ACCESS_TO_DELETE_FOLDER' ) );
+		if (!$this->hasDeleteFolderAccess($collection)) {
+			return ES::exception(JText::_('COM_EASYSOCIAL_EXPLORER_NO_ACCESS_TO_DELETE_FOLDER'));
 		}
-
-		$id 	= is_null( $id ) ? JRequest::getInt( 'id' ) : $id;
-
-		if( !$id )
-		{
-			return FD::exception( JText::_( 'COM_EASYSOCIAL_EXPLORER_INVALID_FOLDER_ID_PROVIDED' ) );
-		}
-
-		$collection 		= FD::table( 'FileCollection' );
-		$collection->load( $id );
 
 		// Try to delete the folder
-		if( !$collection->delete() )
-		{
-			return FD::exception( $collection->getError() );
+		if (!$collection->delete())	{
+			return ES::exception($collection->getError());
 		}
 
-		return FD::exception( JText::_( 'COM_EASYSOCIAL_EXPLORER_FOLDER_DELETED_SUCCESS' ) , SOCIAL_MSG_SUCCESS );
+		return ES::exception(JText::_('COM_EASYSOCIAL_EXPLORER_FOLDER_DELETED_SUCCESS'), SOCIAL_MSG_SUCCESS);
 	}
 
 	/**
@@ -183,32 +180,31 @@ class SocialExplorerHookGroup extends SocialExplorerHooks
 	 */
 	public function removeFile()
 	{
-		// Check if the user has access to delete files from this group
-		if( !$this->group->isMember() )
-		{
-			return FD::exception( JText::_( 'COM_EASYSOCIAL_EXPLORER_NO_ACCESS_TO_DELETE' ) );
-		}
-
 		// Get the file id
-		$ids 	= JRequest::getVar( 'id' );
-		$ids 	= FD::makeArray( $ids );
+		$ids = JRequest::getVar('id');
+		$ids = ES::makeArray($ids);
 
 		if (!$ids) {
 			return array();
 		}
 		
 		foreach ($ids as $id) {
-			$file 		= FD::table( 'File' );
-			$file->load( $id );
+			$file = ES::table('File');
+			$file->load($id);
 
 			if (!$id || !$file->id) {
-				return FD::exception( JText::_( 'COM_EASYSOCIAL_EXPLORER_INVALID_FILE_ID_PROVIDED' ) );
+				return ES::exception(JText::_('COM_EASYSOCIAL_EXPLORER_INVALID_FILE_ID_PROVIDED'));
 			}
 
-			$state 	= $file->delete();
+			// Check if the user has access to delete this file from this group
+			if (!$this->hasDeleteAccess($file)) {
+				return ES::exception(JText::_('COM_EASYSOCIAL_EXPLORER_NO_ACCESS_TO_DELETE'));
+			}
+
+			$state = $file->delete();
 
 			if (!$state) {
-				return FD::exception( JText::_( $file->getError() ) );
+				return ES::exception(JText::_($file->getError()));
 			}
 		}
 

@@ -596,7 +596,7 @@ class ThemesHelperCover extends ThemesHelperAbstract
 
 		foreach ($coreApps as $core) {
 
-			if (in_array($core, array('albums', 'videos', 'audios', 'polls', 'pages', 'groups', 'events'))) {
+			if (in_array($core, array('albums', 'videos', 'audios', 'polls'))) {
 				$method = 'canCreate' . ucfirst($core);
 				$enabled = $user->$method();
 

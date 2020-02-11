@@ -382,7 +382,9 @@ class ControlPanel extends Model
 	public function getFrontendSecretWordError()
 	{
 		// Is frontend backup enabled?
-		$febEnabled = PluginHelper::isEnabled('akeebabackup', 'legacyapi');
+		$febEnabled =
+			($this->container->params->get('legacyapi_enabled', 0) != 0) ||
+			($this->container->params->get('jsonapi_enabled', 0) != 0);
 
 		if (!$febEnabled)
 		{

@@ -37,9 +37,12 @@ defined('_JEXEC') or die('Unauthorized Access');
 	<title><?php echo JText::_('COM_EASYSOCIAL_EVENTS_DIALOG_CONFIRM_PROMOTE_GUEST'); ?></title>
 	<content>
 		<p><?php echo JText::sprintf('COM_EASYSOCIAL_EVENTS_DIALOG_CONFIRM_PROMOTE_GUEST_DESC', $user->getName(), $user->getName());?></p>
+		<?php if (!$isMember) { ?>
+			<p><?php echo JText::sprintf('COM_EASYSOCIAL_EVENTS_DIALOG_CONFIRM_PROMOTE_GUEST_NONMEMBER', $user->getName());?></p>
+		<?php } ?>
 		<form data-promote-event-form method="post" action="<?php echo JRoute::_('index.php');?>">
 			<input type="hidden" name="id" value="<?php echo $event->id;?>" />
-			<input type="hidden" name="uid" value="<?php echo $uid;?>" />
+			<input type="hidden" name="uid" value="<?php echo $user->id;?>" />
 			<input type="hidden" name="controller" value="events" />
 			<input type="hidden" name="task" value="promoteGuest" />
 			<input type="hidden" name="return" value="<?php echo $return;?>" />

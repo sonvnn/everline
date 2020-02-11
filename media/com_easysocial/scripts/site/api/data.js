@@ -189,6 +189,13 @@ EasySocial.require()
 				button.replaceWith(html);
 				button.removeClass('is-loading');
 				esSubscription[task] = false;
+			}).fail(function(data) {
+				if (data !== undefined && data.message != '') {
+					EasySocial.dialog(data.message);
+				}
+
+				button.removeClass('is-loading');
+				esSubscription[task] = false;
 			});
 		});
 
@@ -291,6 +298,24 @@ EasySocial.require()
 			var form = parent.find('[data-es-logout-form]');
 
 			form.submit();
+		});
+
+
+	// login buttons
+	$(document)
+		.on('click', '[data-login-submit]', function() {
+			var button = $(this);
+
+			if (button.enabled()) {
+
+				var form = $(button).closest('form');
+
+				// disable button
+				button.disabled(true);
+
+				// now submit the form.
+				form.submit();
+			}
 		});
 
 	// Video embeds on stream

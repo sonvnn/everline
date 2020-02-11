@@ -18,7 +18,7 @@ class SocialFieldsPageCover extends SocialFieldsUserCover
 	public function upload()
 	{
 		// Get the ajax library
-		$ajax = FD::ajax();
+		$ajax = ES::ajax();
 
 		$tmp = JRequest::getVar($this->inputName , '' , 'FILES');
 
@@ -33,19 +33,19 @@ class SocialFieldsPageCover extends SocialFieldsUserCover
 		}
 
 		// Get user access
-		$access = FD::access($this->uid , SOCIAL_TYPE_CLUSTERS);
+		$access = ES::access($this->uid , SOCIAL_TYPE_CLUSTERS);
 
-        // We need to perform sanity checking here
-        $options = array('name' => $this->inputName, 'maxsize' => $access->get('photos.maxsize') . 'M', 'multiple' => true);
+		// We need to perform sanity checking here
+		$options = array('name' => $this->inputName, 'maxsize' => $access->get('photos.maxsize') . 'M', 'multiple' => true);
 
-        $uploader = ES::uploader($options);
-        $file = $uploader->getFile(null, 'image');
+		$uploader = ES::uploader($options);
+		$file = $uploader->getFile(null, 'image');
 
-        // If there was an error getting uploaded file, stop.
-        if ($file instanceof SocialException) {
-            return $ajax->reject($file->message);
-        }
-        
+		// If there was an error getting uploaded file, stop.
+		if ($file instanceof SocialException) {
+			return $ajax->reject($file->message);
+		}
+
 		$result = $this->createCover($file , $this->inputName);
 
 		return $ajax->resolve($result);

@@ -24,8 +24,8 @@ class SocialEventAppGuests extends SocialAppItem
 
 		// Only guests.event.going, guests.event.notgoing, guests.event.makeadmin has stream item
 		if (in_array($item->cmd, $allowed) && in_array($item->context_type, array('guests.event.going', 'guests.event.notgoing', 'guests.event.makeadmin'))) {
-			$hook = $this->getHook('notification', $item->type);
 
+			$hook = $this->getHook('notification', $item->type);
 			return $hook->execute($item);
 		}
 
@@ -290,7 +290,8 @@ class SocialEventAppGuests extends SocialAppItem
 
 		$owner = ES::user($stream->actor_id);
 
-		$commentContent = ES::string()->parseEmoticons($comment->comment);
+		$parseBBCodeOptions = array('escape' => false, 'links' => true, 'code' => true);
+		$commentContent = ES::string()->normalizeContent($comment->comment, $parseBBCodeOptions);
 
 		$emailOptions = array(
 			'title' => 'APP_USER_EVENTS_GUESTS_EMAILS_' . strtoupper($verb) . '_COMMENT_ITEM_SUBJECT',
@@ -428,7 +429,13 @@ class SocialEventAppGuests extends SocialAppItem
 			$guest = ES::table('EventGuest');
 			$guest->load($item->uid);
 
-			$event = ES::event($item->getParams()->get('eventId'));
+			$eventId = $item->getParams()->get('eventId');
+
+			if (!$eventId) {
+				return;
+			}
+
+			$event = ES::event($eventId);
 
 			$target->id = $event->id;
 			$target->type = 'event';

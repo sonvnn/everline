@@ -228,12 +228,14 @@ EasySocial.module('site/events/guests', function($) {
 
 		"{promote} click": function(link, event) {
 			// Get the user id
-			var userId = link.closest(self.item.selector).data('id');
+			var uid = link.closest(self.item.selector).data('id');
+			var userId = link.closest(self.item.selector).data('user-id');
 			var returnUrl = link.closest(self.item.selector).data('return');
 
 			EasySocial.dialog({
 				content: EasySocial.ajax('site/views/events/confirmPromoteGuest', {
-					"uid" : userId,
+					"uid" : uid,
+					"userId": userId,
 					"id" : opts.id,
 					"return" : returnUrl
 				})

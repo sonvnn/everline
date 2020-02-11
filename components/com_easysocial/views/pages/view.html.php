@@ -135,7 +135,7 @@ class EasySocialViewPages extends EasySocialSiteView
 		// except in participated filter. because we need to show others' page as well
 		$user = $helper->getActiveUser();
 
-		if ($user && !$browseView && $filter != 'participated') {
+		if ($user && !$browseView && ($filter != 'participated' && $filter != 'invited')) {
 			$options['uid'] = $user->id;
 		}
 

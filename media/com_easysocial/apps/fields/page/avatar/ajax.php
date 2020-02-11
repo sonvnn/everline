@@ -21,7 +21,7 @@ class SocialFieldsPageAvatar extends SocialFieldsUserAvatar
 	 * @since	2.0
 	 * @access	public
 	 * @param	string
-	 * @return	
+	 * @return
 	 */
 	public function upload()
 	{
@@ -46,15 +46,15 @@ class SocialFieldsPageAvatar extends SocialFieldsUserAvatar
 		$access = ES::access($this->uid, SOCIAL_TYPE_CLUSTERS);
 
 		// We need to perform sanity checking here
-        $options = array('name' => $this->inputName, 'maxsize' => $access->get('photos.maxsize') . 'M', 'multiple' => true);
+		$options = array('name' => $this->inputName, 'maxsize' => $access->get('photos.maxsize') . 'M', 'multiple' => true);
 
-        $uploader = ES::uploader($options);
-        $file = $uploader->getFile(null, 'image');
+		$uploader = ES::uploader($options);
+		$file = $uploader->getFile(null, 'image');
 
-        // If there was an error getting uploaded file, stop.
-        if ($file instanceof SocialException) {
-        	return $ajax->reject($file->message);
-        }
+		// If there was an error getting uploaded file, stop.
+		if ($file instanceof SocialException) {
+			return $ajax->reject($file->message);
+		}
 
 
 		// Load up the image library so we can get the appropriate extension
@@ -81,6 +81,6 @@ class SocialFieldsPageAvatar extends SocialFieldsUserAvatar
 		$tmpUri = SocialFieldsUserAvatarHelper::getStorageURI($this->inputName);
 		$uri = $tmpUri . '/' . $tmpName;
 
-		return $ajax->resolve($file, $uri, $target);
+		return $ajax->resolve($file['name'], $uri, $tmpName);
 	}
 }

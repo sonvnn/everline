@@ -1,7 +1,7 @@
 <?php
 /**
 * @package		EasySocial
-* @copyright	Copyright (C) 2010 - 2018 Stack Ideas Sdn Bhd. All rights reserved.
+* @copyright	Copyright (C) 2010 - 2020 Stack Ideas Sdn Bhd. All rights reserved.
 * @license		GNU/GPL, see LICENSE.php
 * EasySocial is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
@@ -15,18 +15,21 @@ defined('_JEXEC') or die('Unauthorized Access');
 	<?php if ($hashtag) { ?>
 		<div class="es-stream-filter-bar__cell">
 			<div class="o-media">
-				<div class="o-media__image">
+				<div class="o-media__body">
 					<?php echo JText::sprintf('COM_EASYSOCIAL_STREAM_HASHTAG_CURRENTLY_FILTERING' , '<a href="' . ESR::dashboard(array('layout' => 'hashtag' , 'tag' => $hashtagAlias)) . '">#' . $hashtag . '</a>'); ?>
 				</div>
+
 				<div class="active t-hidden" style="display:none;" data-filter-item data-type="hashtag" data-tag="<?php echo $hashtagAlias; ?>"></div>
 			</div>
 		</div>
 
+		<?php if ($this->my->id) { ?>
 		<div class="es-stream-filter-bar__cell">
 			<a href="javascript:void(0);" data-hashtag-filter-save data-tag="<?php echo $hashtag;?>" class="btn btn-es-default-o btn-sm">
 				<?php echo JText::_('COM_ES_CREATE_NEW_FILTER');?>
 			</a>
 		</div>
+		<?php } ?>
 	<?php } ?>
 
 	<?php if (!$hashtag) { ?>

@@ -51,6 +51,7 @@ defined('_JEXEC') or die('Unauthorized Access');
 							<div class="o-loader o-loader--sm"></div>
 						</li>
 					<?php } else { ?>
+						<?php if ((!$cluster && $user->canCreateEvents()) || ($cluster && $cluster->canCreateEvent())) { ?>
 						<li class="o-tabs__item has-notice <?php echo $filter == 'created'? 'active' : ''; ?>" data-filter-item data-type="created">
 							<a href="<?php echo $filtersLink->created; ?>"
 
@@ -62,6 +63,8 @@ defined('_JEXEC') or die('Unauthorized Access');
 							<span class="o-tabs__bubble" data-counter><?php echo $counters->created; ?></span>
 							<div class="o-loader o-loader--sm"></div>
 						</li>
+						<?php } ?>
+
 						<?php if (!$cluster) { ?>
 						<li class="o-tabs__item has-notice <?php echo $filter == 'participated'? 'active' : ''; ?>" data-filter-item data-type="participated">
 							<a href="<?php echo $filtersLink->participated; ?>"
@@ -88,6 +91,7 @@ defined('_JEXEC') or die('Unauthorized Access');
 							<div class="o-loader o-loader--sm"></div>
 						</li>
 
+						<?php if ((!$cluster && $this->lib->my->canCreateEvents()) || ($cluster && $cluster->canCreateEvent())) { ?>
 						<li class="o-tabs__item has-notice <?php echo $filter == 'createdbyme' ? 'active' : ''; ?>" data-filter-item data-type="createdbyme">
 							<a href="<?php echo ES::event()->getFilterPermalink(array('filter' => 'createdbyme', 'cluster' => $cluster)); ?>"
 							title="<?php echo JText::_('COM_EASYSOCIAL_PAGE_TITLE_EVENTS_FILTER_CREATEDBYME', true); ?>"
@@ -97,6 +101,8 @@ defined('_JEXEC') or die('Unauthorized Access');
 							<span class="o-tabs__bubble" data-counter><?php echo $counters->createdbyme; ?></span>
 							<div class="o-loader o-loader--sm"></div>
 						</li>
+						<?php } ?>
+
 					<?php } ?>
 
 					<?php if ($showPendingEvents) { ?>

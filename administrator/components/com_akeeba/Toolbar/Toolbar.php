@@ -59,7 +59,10 @@ class Toolbar extends BaseToolbar
 
 		JToolbarHelper::spacer();
 
-		$bar->appendButton('Link', 'calendar', JText::_('COM_AKEEBA_SCHEDULE'), 'index.php?option=com_akeeba&view=Schedule');
+		if (AKEEBA_PRO)
+		{
+			$bar->appendButton('Link', 'calendar', JText::_('COM_AKEEBA_SCHEDULE'), 'index.php?option=com_akeeba&view=Schedule');
+		}
 
 		JToolbarHelper::spacer();
 		JToolbarHelper::help(null, false, 'https://www.akeebabackup.com/documentation/akeeba-backup-documentation/configuration.html');

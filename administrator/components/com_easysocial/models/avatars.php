@@ -1,7 +1,7 @@
 <?php
 /**
 * @package		EasySocial
-* @copyright	Copyright (C) 2010 - 2019 Stack Ideas Sdn Bhd. All rights reserved.
+* @copyright	Copyright (C) 2010 - 2020 Stack Ideas Sdn Bhd. All rights reserved.
 * @license		GNU/GPL, see LICENSE.php
 * EasySocial is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
@@ -27,8 +27,6 @@ class EasySocialModelAvatars extends EasySocialModel
 	 *
 	 * @since	1.4.6
 	 * @access	public
-	 * @param	string
-	 * @return
 	 */
 	public function getAvatarsStoredExternally($storageType = 'amazon')
 	{
@@ -54,8 +52,6 @@ class EasySocialModelAvatars extends EasySocialModel
 	 *
 	 * @since	1.0
 	 * @access	public
-	 * @param	string
-	 * @return
 	 */
 	public function deleteDefaultAvatars( $uid , $type = SOCIAL_TYPE_PROFILES )
 	{
@@ -124,8 +120,6 @@ class EasySocialModelAvatars extends EasySocialModel
 	 *
 	 * @since	1.0
 	 * @access	public
-	 * @param	string
-	 * @return
 	 */
 	public function getAvatars( $options = array() )
 	{
@@ -208,10 +202,6 @@ class EasySocialModelAvatars extends EasySocialModel
 	 *
 	 * @since	1.0
 	 * @access	public
-	 * @param	int		The unique id
-	 * @param	string	The unique type. E.g: @SOCIAL_TYPE_USER
-	 * @return	Array	A list of default avatars.
-	 * @author	Mark Lee <mark@stackideas.com>
 	 */
 	public function getDefaultAvatars($uid, $type = SOCIAL_TYPE_PROFILES, $defaultOnly = false)
 	{
@@ -318,8 +308,6 @@ class EasySocialModelAvatars extends EasySocialModel
 	 *
 	 * @since	1.0
 	 * @access	public
-	 * @param	string
-	 * @return
 	 */
 	public function isAllowed( $id , $uid , $type = SOCIAL_TYPE_PROFILES )
 	{
@@ -336,6 +324,29 @@ class EasySocialModelAvatars extends EasySocialModel
 		$allowed 	= $db->loadResult() > 0 ? true : false;
 
 		return $allowed;
+	}
 
+	/**
+	 * Determines if the current user editing the user avatar photo from edit album page.
+	 *
+	 * @since	3.2.6
+	 * @access	public
+	 */
+	public function isEditingCurrentAvatar($uid, $photoId, $type = SOCIAL_TYPE_USER)
+	{
+		$db = ES::db();
+		$query = array();
+
+		$query[] = 'SELECT * FROM ' . $db->nameQuote('#__social_avatars');
+		$query[] = 'WHERE ' . $db->nameQuote('uid') . '=' . $db->Quote($uid);
+		$query[] = 'AND ' . $db->nameQuote('type') . '=' . $db->Quote($type);
+		$query[] = 'AND ' . $db->nameQuote('photo_id') . '=' . $db->Quote($photoId);
+
+		$query = implode(' ', $query);
+		$db->setQuery($query);
+
+		$isEditingCurrentAvatar = $db->loadResult() > 0 ? true : false;
+
+		return $isEditingCurrentAvatar;
 	}
 }

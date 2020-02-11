@@ -441,7 +441,8 @@ class SocialUserAppPolls extends SocialAppItem
 		$polls = ES::table('Polls');
 		$polls->load($comment->uid);
 
-		$commentContent = ES::string()->parseEmoticons($comment->comment);
+		$parseBBCodeOptions = array('escape' => false, 'links' => true, 'code' => true);
+		$commentContent = ES::string()->normalizeContent($comment->comment, $parseBBCodeOptions);
 
 		// Prepare the email params
 		$mailParams = array();

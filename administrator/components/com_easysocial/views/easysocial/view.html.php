@@ -50,8 +50,8 @@ class EasySocialViewEasySocial extends EasySocialAdminView
 
 		// Get total pending users
 		$usersModel = ES::model('Users');
-		$pendingUsers = $usersModel->getPendingUsers();
-		$totalPending = count($pendingUsers);
+		$totalPending = $usersModel->getPendingUsersCount();
+		$pendingUsers = $usersModel->getPendingUsers(array('limit' => 20));
 
 		// Get total events
 		$eventsModel = ES::model('Events');

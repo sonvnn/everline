@@ -767,7 +767,8 @@ class SocialStory extends EasySocial
 		);
 
 		// We should parse emoticons for email content
-		$content = ES::string()->parseEmoticons($content);
+		$parseBBCodeOptions = array('escape' => false, 'links' => true, 'code' => true);
+		$content = ES::string()->normalizeContent($content, $parseBBCodeOptions);
 
 		$emailOptions = array(
 			'title' => 'COM_EASYSOCIAL_EMAILS_USER_POSTED_ON_YOUR_TIMELINE_SUBJECT',
@@ -777,7 +778,7 @@ class SocialStory extends EasySocial
 								'actorAvatar' => $actor->getAvatar(),
 								'actorLink' => $actor->getPermalink(true, true),
 								'permalink' => $stream->getPermalink(false, true),
-								'content' => nl2br($content)
+								'content' => $content
 								)
 		);
 

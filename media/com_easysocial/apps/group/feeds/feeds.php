@@ -207,7 +207,8 @@ class SocialGroupAppFeeds extends SocialAppItem
 		$cluster = $stream->getCluster();
 
 		// Parse emoticon
-		$commentContent = ES::string()->parseEmoticons($comment->comment);
+		$parseBBCodeOptions = array('escape' => false, 'links' => true, 'code' => true);
+		$commentContent = ES::string()->normalizeContent($comment->comment, $parseBBCodeOptions);
 
 		// Set the email options
 		$emailOptions = array(

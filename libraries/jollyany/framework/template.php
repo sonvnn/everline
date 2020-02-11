@@ -7,7 +7,7 @@
  */
 defined('_JEXEC') or die;
 jimport('astroid.framework.template');
-jimport('astroid.framework.helper');
+jimport('jollyany.framework.helper');
 jimport('astroid.framework.element');
 
 class JollyanyFrameworkTemplate extends AstroidFrameworkTemplate{
@@ -100,4 +100,32 @@ class JollyanyFrameworkTemplate extends AstroidFrameworkTemplate{
 		}
 		$this->setLog("Javascripts Loaded!", "success");
 	}
+
+    public function buildAstroidCSS($version, $css = '')
+    {
+        $prefix = 'jollyany-';
+        if ($this->cssFile) {
+            $issetPreset = JFactory::getApplication()->input->get('preset', '');
+            if (!empty($issetPreset)) {
+                $prefix = 'preset-';
+            }
+
+            $template_dir = JPATH_SITE . '/templates/' . $this->template . '/css';
+            if (!file_exists($template_dir . '/' . $prefix . $version . '.css')) {
+                if (empty($issetPreset)) {
+                    JollyanyFrameworkHelper::clearCache($this->template, 'jollyany');
+                }
+                $styles = preg_grep('~^' . $prefix . '.*\.(css)$~', scandir($template_dir));
+                foreach ($styles as $style) {
+                    $space_time    =   time() - filemtime($template_dir . '/' .$style);
+                    if ($space_time > 86400) {
+                        unlink($template_dir . '/' . $style);
+                    }
+                }
+                file_put_contents($template_dir . '/' . $prefix . $version . '.css', $css);
+            }
+        }
+        $document = JFactory::getDocument();
+        $document->addStyleSheet(JURI::root() . 'templates/' . $this->template . '/css/' . $prefix . $version . '.css');
+    }
 }

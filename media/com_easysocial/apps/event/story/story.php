@@ -83,7 +83,8 @@ class SocialEventAppStory extends SocialAppItem
 
 		$actor = ES::user($comment->created_by);
 
-		$commentContent = ES::string()->parseEmoticons($comment->comment);
+		$parseBBCodeOptions = array('escape' => false, 'links' => true, 'code' => true);
+		$commentContent = ES::string()->normalizeContent($comment->comment, $parseBBCodeOptions);
 
 		$emailOptions = array(
 			'title' => 'APP_EVENT_STORY_EMAILS_COMMENT_ITEM_TITLE',

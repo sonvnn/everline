@@ -14,9 +14,7 @@ defined('_JEXEC') or die('Unauthorized Access');
 <?php foreach ($result as $group) { ?>
 	<?php if (isset($group->result) && $group->result) { ?>
 		<?php foreach ($group->result as $item) { ?>
-			<div class="es-list__item">
-				<?php echo $this->loadTemplate('site/search/default/types/' . $group->namespace, array('item' => $item)); ?>
-			</div>
+			<?php echo $this->loadTemplate('site/search/default/types/' . $group->namespace, array('item' => $item)); ?>
 		<?php } ?>
 	<?php } ?>
 <?php } ?>

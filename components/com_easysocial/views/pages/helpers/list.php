@@ -25,6 +25,11 @@ class EasySocialViewPagesListHelper extends EasySocial
 
 		if (is_null($id)) {
 			$id = $this->input->get('userid', false, 'int');
+
+			if ($id === false) {
+				// ajax is usering userId so we need to check again if the id is false.
+				$id = $this->input->get('userId', false, 'int');
+			}
 		}
 
 		return $id;
@@ -264,8 +269,19 @@ class EasySocialViewPagesListHelper extends EasySocial
 		static $default = null;
 
 		if (is_null($default)) {
+
+			$activeUser = $this->getActiveUser();
+
+			if ($activeUser === false) {
+				$activeUser = ES::user();
+			}
+
 			// If we are viewing profile's page listing default the $filter to 'created'
-			$default = $this->isBrowseView() ? 'all' : 'created';
+			if ($activeUser->canCreatePages()) { 
+				$default = $this->isBrowseView() ? 'all' : 'created';
+			} else {
+				$default = $this->isBrowseView() ? 'all' : 'participated';
+			}
 		}
 
 		return $default;

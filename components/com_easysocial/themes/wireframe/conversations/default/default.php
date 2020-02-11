@@ -1,7 +1,7 @@
 <?php
 /**
 * @package      EasySocial
-* @copyright    Copyright (C) 2010 - 2017 Stack Ideas Sdn Bhd. All rights reserved.
+* @copyright    Copyright (C) 2010 - 2020 Stack Ideas Sdn Bhd. All rights reserved.
 * @license      GNU/GPL, see LICENSE.php
 * EasySocial is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
@@ -13,13 +13,13 @@ defined('_JEXEC') or die('Unauthorized Access');
 ?>
 <?php if ($this->isMobile()) { ?>
 	<div class="es-new-convo-wrapper">
-	<a class="btn btn-es-primary btn-block btn-mobile-new-convo" href="<?php echo ESR::conversations(array('layout' => 'compose'));?>">
-		<?php echo JText::_('COM_EASYSOCIAL_CONVERSATION_NEW_CONVERSATION'); ?>
-	</a>
+		<a class="btn btn-es-primary btn-block btn-mobile-new-convo" href="<?php echo ESR::conversations(array('layout' => 'compose'));?>">
+			<?php echo JText::_('COM_EASYSOCIAL_CONVERSATION_NEW_CONVERSATION'); ?>
+		</a>
 	</div>
 <?php } ?>
 
-	<div class="es-conversations <?php echo ($this->isMobile()) ? ' sidebar-open' : ''; ?>" data-es-conversations data-es-container>
+	<div class="es-conversations <?php echo ($this->isMobile() && $isListing) ? ' sidebar-open' : ''; ?>" data-es-conversations data-es-container>
 
 		<div class="es-convo">
 			<div class="es-convo__sidebar">
@@ -250,7 +250,6 @@ defined('_JEXEC') or die('Unauthorized Access');
 				</div>
 
 				<?php echo $this->render('module', 'es-conversations-after-contents'); ?>
-
 			</div>
 		</div>
 	</div>

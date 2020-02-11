@@ -10,7 +10,8 @@ use Joomla\Archive\Archive;
 \JLoader::import('joomla.filesystem.file');
 \JLoader::import('joomla.filesystem.folder');
 \JLoader::import('joomla.filesystem.path');
-class JollyanyFrameworkHelper {
+jimport('astroid.framework.helper');
+class JollyanyFrameworkHelper extends AstroidFrameworkHelper {
 
 	/**
 	 * Unserialize value only if it was serialized.
@@ -266,8 +267,8 @@ class JollyanyFrameworkHelper {
 		$lictext    =   '';
 		jimport('joomla.filesystem.file');
 		jimport('joomla.filesystem.folder');
-		if (JFolder::exists(JPATH_ROOT.DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR.'jollyany'.DIRECTORY_SEPARATOR.'key')) {
-			$key    =   JFolder::files(JPATH_ROOT.DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR.'jollyany'.DIRECTORY_SEPARATOR.'key', '.txt', false, true);
+		if (JFolder::exists(JPATH_ROOT.DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR.'jollyanykey')) {
+			$key    =   JFolder::files(JPATH_ROOT.DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR.'jollyanykey', '.txt', false, true);
 			if (count($key)) {
 				$lictext    =   JFile::read($key[0]);
 			}
@@ -317,4 +318,36 @@ class JollyanyFrameworkHelper {
 		}
 		return $presets;
 	}
+
+    public static function clearCache($template = '', $prefix = 'style')
+    {
+        $template_dir = JPATH_SITE . '/' . 'templates' . '/' . $template . '/' . 'css';
+        $version = new \JVersion;
+        $version->refreshMediaVersion();
+        if (!file_exists($template_dir)) {
+            throw new \Exception("Template not found.", 404);
+        }
+
+        if (is_array($prefix)) {
+            foreach ($prefix as $pre) {
+                $styles = preg_grep('~^' . $pre . '-.*\.(css)$~', scandir($template_dir));
+                foreach ($styles as $style) {
+                    $space_time    =   time() - filemtime($template_dir . '/' .$style);
+                    if ($space_time > 86400) {
+                        unlink($template_dir . '/' . $style);
+                    }
+                }
+            }
+        } else {
+            $styles = preg_grep('~^' . $prefix . '-.*\.(css)$~', scandir($template_dir));
+            foreach ($styles as $style) {
+                $space_time    =   time() - filemtime($template_dir . '/' .$style);
+                if ($space_time > 86400) {
+                    unlink($template_dir . '/' . $style);
+                }
+            }
+        }
+        self::clearJoomlaCache();
+        return true;
+    }
 }

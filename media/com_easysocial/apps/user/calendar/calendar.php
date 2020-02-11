@@ -210,7 +210,7 @@ class SocialUserAppCalendar extends SocialAppItem
 		// Apply actions on the stream
 		$item->likes = ES::likes($item->contextId , 'calendar', $item->verb, SOCIAL_APPS_GROUP_USER, $item->uid );
 		$item->comments = ES::comments($item->contextId, 'calendar' , $item->verb, SOCIAL_APPS_GROUP_USER, array('url' => $calendar->getPermalink(false, true, false)), $item->uid);
-		
+
 		$app = $this->getApp();
 
 		// Get the term to be displayed
@@ -270,7 +270,8 @@ class SocialUserAppCalendar extends SocialAppItem
 		$calendar = ES::table('Calendar');
 		$calendar->load($comment->uid);
 
-		$commentContent = ES::string()->parseEmoticons($comment->comment);
+		$parseBBCodeOptions = array('escape' => false, 'links' => true, 'code' => true);
+		$commentContent = ES::string()->normalizeContent($comment->comment, $parseBBCodeOptions);
 
 		$emailOptions = array(
 			'title' => 'APP_USER_CALENDAR_EMAILS_COMMENT_ITEM_TITLE',

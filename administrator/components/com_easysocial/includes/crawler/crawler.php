@@ -1,7 +1,7 @@
 <?php
 /**
 * @package		EasySocial
-* @copyright	Copyright (C) 2010 - 2018 Stack Ideas Sdn Bhd. All rights reserved.
+* @copyright	Copyright (C) 2010 - 2020 Stack Ideas Sdn Bhd. All rights reserved.
 * @license		GNU/GPL, see LICENSE.php
 * EasySocial is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
@@ -87,11 +87,11 @@ class SocialCrawler
 		$max = strlen($text);
 		$buf = "";
 		for($i = 0; $i < $max; $i++){
-			$c1 = $text{$i};
+			$c1 = $text[$i];
 			if($c1>="\xc0"){ //Should be converted to UTF8, if it's not UTF8 already
-			  $c2 = $i+1 >= $max? "\x00" : $text{$i+1};
-			  $c3 = $i+2 >= $max? "\x00" : $text{$i+2};
-			  $c4 = $i+3 >= $max? "\x00" : $text{$i+3};
+			  $c2 = $i+1 >= $max? "\x00" : $text[$i+1];
+			  $c3 = $i+2 >= $max? "\x00" : $text[$i+2];
+			  $c4 = $i+3 >= $max? "\x00" : $text[$i+3];
 				if($c1 >= "\xc0" & $c1 <= "\xdf"){ //looks like 2 bytes UTF8
 					if($c2 >= "\x80" && $c2 <= "\xbf"){ //yeah, almost sure it's UTF8 already
 						$buf .= $c1 . $c2;

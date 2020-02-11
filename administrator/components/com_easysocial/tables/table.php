@@ -11,8 +11,6 @@
 */
 defined('_JEXEC') or die('Unauthorized Access');
 
-ES::import('admin:/includes/privacy/privacy');
-
 class SocialTable extends JTable
 {
 	private $composite = array();

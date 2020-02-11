@@ -569,7 +569,7 @@ class EasySocialModelSearch extends EasySocialModel
 			return '';
 		}
 
-		$filterCount = count($options['criterias']);
+		$filterCount = $options['criterias'] ? count($options['criterias']) : 0;
 
 		$streamLib = ES::stream();
 
@@ -918,7 +918,8 @@ class EasySocialModelSearch extends EasySocialModel
 
 		$queries = array();
 		$oQueries = array();
-		$filterCount = count($options[ 'criterias' ]);
+
+		$filterCount = $options['criterias'] ? count($options['criterias']) : 0;
 
 		$lib = ES::advancedsearch(SOCIAL_FIELDS_GROUP_USER);
 

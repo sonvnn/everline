@@ -106,11 +106,12 @@ class SocialSidebarEvents extends SocialSidebarAbstract
 	{
 		// Get helper proxy for events view
 		$helper = ES::viewHelper('events', 'list');
+		$user = $helper->getActiveUser();
 
 		// Retrieve known filter from events view
 		$cluster = $helper->getCluster();
 		$browseView = $helper->getBrowseView();
-		$filter = $helper->getFilter();
+		$filter = $helper->getCurrentFilter();
 		$createUrl = $helper->getCreateUrl();
 		$filtersLink = $helper->getFiltersLink();
 		$counters = $helper->getCounters();

@@ -167,8 +167,8 @@ class GuestsViewEvents extends SocialAppsView
 			$options['filter'] = 'pending';
 			$links->pending = ESR::events($options);
 
-			$options['admin'] = true;
-			$links->admin = ESR::events($options);
+			$options['filter'] = 'admin';
+			$links->admin = ESR::events($options); 
 		}
 
 		return $links;

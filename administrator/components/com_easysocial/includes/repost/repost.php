@@ -325,4 +325,19 @@ class SocialRepost extends EasySocial
 		return false;
 	}
 
+	public function toExportData(SocialUser $viewer)
+	{
+		$repost = new stdClass();
+		$repost->uid = $this->uid;
+		$repost->element = $this->element;
+		$repost->group = $this->group;
+		$repost->cluster_id = $this->cluster_id;
+		$repost->cluster_type = $this->cluster_type;
+		$repost->share_as = $this->share_as;
+		$repost->stream_id = $this->stream_id;
+		$repost->isShared = $this->isShared($viewer->id);
+
+		return $repost;
+	}
+
 }

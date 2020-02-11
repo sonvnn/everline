@@ -1550,6 +1550,14 @@ class SocialVideo extends EasySocial
 			return;
 		}
 
+		$isRestApi = ES::input()->get('rest', false, 'bool');
+
+		// If this coming from REST, skip the nl2br process.
+		// https://git.stackideas.com/stackideas/easysocial-mobile/issues/209
+		if ($isRestApi) {
+			return $desc;
+		}
+
 		// Only process this if the description doesn't have those HTML tag
 		if (strpos($desc, '<p>') === false && strpos($desc, '<br />') === false && strpos($desc, '<br>') === false) {
 			$desc = nl2br($desc);
@@ -2767,6 +2775,12 @@ class SocialVideo extends EasySocial
 		// Retrieve the likes library
 		$likes = $this->getLikes('create', $streamId);
 
+		$creator = $this->getAuthor();
+
+		if ($this->isCreatedInCluster() && $this->table->post_as === 'page') {
+			$creator = ES::cluster(SOCIAL_TYPE_PAGE, $this->table->uid);
+		}
+
 		$result = array(
 			'id' => $this->id,
 			'title' => $this->getTitle(),
@@ -2774,7 +2788,7 @@ class SocialVideo extends EasySocial
 			'category' => $this->getCategory()->toExportData($viewer),
 			'duration' => $this->getDuration(),
 			'created' => $this->table->created,
-			'author' => $this->getAuthor()->toExportData($viewer),
+			'author' => $creator->toExportData($viewer),
 			'hits' => $this->getHits(),
 			'isExternal' => $this->isLink(),
 			'isFeatured' => $this->table->featured,

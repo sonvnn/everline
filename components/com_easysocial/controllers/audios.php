@@ -119,6 +119,10 @@ class EasySocialControllerAudios extends EasySocialController
 
 		if ($filter && !$genre) {
 			$pagination->setVar('filter', $filter);
+
+			$user = ES::user($uid);
+			$pagination->setVar('uid', $user->getAlias());
+			$pagination->setVar('type', $type);
 		}
 
 		$activeGenre = false;
@@ -129,7 +133,9 @@ class EasySocialControllerAudios extends EasySocialController
 
 			$activeGenre = $audioGenre;
 
-			$pagination->setVar('uid', $uid);
+			$user = ES::user($uid);
+			$pagination->setVar('uid', $user->getAlias());
+
 			$pagination->setVar('type', $type);
 			$pagination->setVar('genreId', $audioGenre->getAlias());
 		}
@@ -329,7 +335,7 @@ class EasySocialControllerAudios extends EasySocialController
 
 			$row->title	= $file['name'];
 			$row->file = $value;
-			$row->path = JPATH_ROOT . '/media/com_easysocial/tmp/' . $base . '/' . $value;
+			$row->path = '/media/com_easysocial/tmp/' . $base . '/' . $value;
 			$row->uri = rtrim(JURI::root(), '/') . '/media/com_easysocial/tmp/' . $base . '/' . $value;
 
 			$result[$size] = $row;

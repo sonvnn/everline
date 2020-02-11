@@ -133,7 +133,8 @@ class SocialUserAppLinks extends SocialAppItem
 		// Get the actor of the likes
 		$actor = ES::user($comment->created_by);
 
-		$commentContent = ES::string()->parseEmoticons($comment->comment);
+		$parseBBCodeOptions = array('escape' => false, 'links' => true, 'code' => true);
+		$commentContent = ES::string()->normalizeContent($comment->comment, $parseBBCodeOptions);
 
 		// Set the email options
 		$emailOptions = array(

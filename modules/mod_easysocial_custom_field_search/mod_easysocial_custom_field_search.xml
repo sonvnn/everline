@@ -2,12 +2,12 @@
 <extension version="3.1" type="module" client="site" method="upgrade">
 	<name>EasySocial Custom Field Search</name>
 	<author>Stack Ideas Sdn Bhd</author>
-	<creationDate>8th January 2020</creationDate>
-	<copyright>Copyright (C) 2009 - 2018 Stack Ideas Sdn Bhd. All rights reserved.</copyright>
+	<creationDate>7th February 2020</creationDate>
+	<copyright>Copyright (C) 2009 - 2020 Stack Ideas Sdn Bhd. All rights reserved.</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail>support@stackideas.com</authorEmail>
 	<authorUrl>http://stackideas.com</authorUrl>
-	<version>3.0.31</version>
+	<version>3.0.41</version>
 	<description><![CDATA[MOD_ES_CUSTOM_FIELD_SEARCH_DESC]]></description>
 	<files>
 		<folder>scripts</folder>
@@ -15,6 +15,7 @@
 		<filename>helper.php</filename>
 		<filename module="mod_easysocial_custom_field_search">mod_easysocial_custom_field_search.php</filename>
 		<filename>mod_easysocial_custom_field_search.xml</filename>
+		<filename>validatetype.php</filename>
 	</files>
 	<languages>
 		<language tag="en-GB">en-GB.mod_easysocial_custom_field_search.ini</language>
@@ -22,7 +23,7 @@
 	</languages>
 	<config>
 		<fields name="params" addfieldpath="/administrator/components/com_easysocial/models/fields">
-			<fieldset name="basic">
+			<fieldset name="basic" addrulepath="modules/mod_easysocial_custom_field_search">
 				<field name="searchtype" type="list" default="1" label="MOD_ES_CUSTOM_FIELD_SEARCH_TYPE" description="MOD_ES_CUSTOM_FIELD_SEARCH_TYPE_DESC">
 					<option value="user">MOD_ES_CUSTOM_FIELD_SEARCH_USER</option>
 					<option value="group">MOD_ES_CUSTOM_FIELD_SEARCH_GROUP</option>
@@ -30,13 +31,13 @@
 					<option value="event">MOD_ES_CUSTOM_FIELD_SEARCH_EVENT</option>
 				</field>
 
-				<field name="profile_id" type="easysocial_profile" showon="searchtype:user" label="MOD_ES_CUSTOM_FIELD_PROFILE" description="MOD_ES_CUSTOM_FIELD_PROFILE_DESC" required="true"/>
+				<field name="profile_id" validate="validatetype" type="easysocial_profile" showon="searchtype:user" label="MOD_ES_CUSTOM_FIELD_PROFILE" description="MOD_ES_CUSTOM_FIELD_PROFILE_DESC" />
 
-				<field name="group_category" type="easysocial_groupcategory" showon="searchtype:group" label="MOD_ES_CUSTOM_FIELD_CATEGORY_GROUP" description="MOD_ES_CUSTOM_FIELD_CATEGORY_DESC" />
+				<field name="group_category" validate="validatetype" type="easysocial_groupcategory" showon="searchtype:group" label="MOD_ES_CUSTOM_FIELD_CATEGORY_GROUP" description="MOD_ES_CUSTOM_FIELD_CATEGORY_DESC" />
 
-				<field name="page_category" type="easysocial_pagecategory" showon="searchtype:page" label="MOD_ES_CUSTOM_FIELD_CATEGORY_PAGE" description="MOD_ES_CUSTOM_FIELD_CATEGORY_DESC" />
+				<field name="page_category" validate="validatetype" type="easysocial_pagecategory" showon="searchtype:page" label="MOD_ES_CUSTOM_FIELD_CATEGORY_PAGE" description="MOD_ES_CUSTOM_FIELD_CATEGORY_DESC" />
 
-				<field name="event_category" type="easysocial_eventcategory" showon="searchtype:event" label="MOD_ES_CUSTOM_FIELD_CATEGORY_EVENT" description="MOD_ES_CUSTOM_FIELD_CATEGORY_DESC" />
+				<field name="event_category" validate="validatetype" type="easysocial_eventcategory" showon="searchtype:event" label="MOD_ES_CUSTOM_FIELD_CATEGORY_EVENT" description="MOD_ES_CUSTOM_FIELD_CATEGORY_DESC" />
 
 				<field name="filtermode" type="list" default="0" label="MOD_ES_FIELDS_FILTER_MODE" description="MOD_ES_FIELDS_FILTER_MODE_DESC">
 					<option value="equal">MOD_ES_INCLUDE</option>

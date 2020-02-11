@@ -1,7 +1,7 @@
 <?php
 /**
 * @package		EasySocial
-* @copyright	Copyright (C) 2010 - 2018 Stack Ideas Sdn Bhd. All rights reserved.
+* @copyright	Copyright (C) 2010 - 2020 Stack Ideas Sdn Bhd. All rights reserved.
 * @license		GNU/GPL, see LICENSE.php
 * EasySocial is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
@@ -31,25 +31,28 @@ defined('_JEXEC') or die('Unauthorized Access');
 			</div>
 		</div>
 
-		<div class="es-mobile-filter__bd" data-es-events-filters>
-			<div class="es-mobile-filter__group is-active" data-es-sly-group data-type="filters">
-				<div class="es-mobile-filter-slider is-end-left" data-es-sly-slider>
-					<div class="es-mobile-filter-slider__content">
-						<?php echo $this->html('mobile.filterTab', 'COM_EASYSOCIAL_ACTIVITY_ALL_ACTIVITIES', FRoute::activities(), $active == 'all' ? true : false, array('data-sidebar-item', 'data-type="all"')); ?>
-						<?php echo $this->html('mobile.filterTab', 'COM_EASYSOCIAL_ACTIVITY_HIDDEN_ACTIVITIES', FRoute::activities(array('type' => 'hidden')), $active == 'hidden' ? true : false, array('data-sidebar-item', 'data-type="hidden"')); ?>
-						<?php echo $this->html('mobile.filterTab', 'COM_EASYSOCIAL_ACTIVITY_HIDDEN_APPS', FRoute::activities(array('type' => 'hiddenapp')), $active == 'hiddenapp' ? true : false, array('data-sidebar-item', 'data-type="hiddenapp"')); ?>
-						<?php echo $this->html('mobile.filterTab', 'COM_EASYSOCIAL_ACTIVITY_HIDDEN_ACTORS', FRoute::activities(array('type' => 'hiddenactor')), $active == 'hiddenactor' ? true : false, array('data-sidebar-item', 'data-type="hiddenactor"')); ?>
+		<div class="es-mobile-filter__bd" data-es-group-filters>
+			<div class="es-mobile-filter__group is-active" data-es-swiper-group data-type="filters">
+				<div class="es-mobile-filter-slider " data-es-swiper-slider>
+					<div class="es-mobile-filter-slider__content" data-es-swiper-container>
+						<div class="swiper-wrapper">
+							<?php echo $this->html('mobile.filterTab', 'COM_EASYSOCIAL_ACTIVITY_ALL_ACTIVITIES', FRoute::activities(), $active == 'all' ? true : false, array('data-sidebar-item', 'data-type="all"', 'title="' . JText::_('COM_EASYSOCIAL_ACTIVITY_ALL_ACTIVITIES') . '"')); ?>
+							<?php echo $this->html('mobile.filterTab', 'COM_EASYSOCIAL_ACTIVITY_HIDDEN_APPS', FRoute::activities(array('type' => 'hiddenapp')), $active == 'hiddenapp' ? true : false, array('data-sidebar-item', 'data-type="hiddenapp"', 'title="' . JText::_('COM_EASYSOCIAL_ACTIVITY_HIDDEN_APPS') . '"')); ?>
+							<?php echo $this->html('mobile.filterTab', 'COM_EASYSOCIAL_ACTIVITY_HIDDEN_ACTORS', FRoute::activities(array('type' => 'hiddenactor')), $active == 'hiddenactor' ? true : false, array('data-sidebar-item', 'data-type="hiddenactor"', 'title="' . JText::_('COM_EASYSOCIAL_ACTIVITY_HIDDEN_ACTORS') . '"')); ?>
+						</div>
 					</div>
 				</div>
 			</div>
 
 			<?php if ($apps) { ?>
-			<div class="es-mobile-filter__group t-hidden" data-es-sly-group data-type="apps">
-				<div class="es-mobile-filter-slider is-end-left" data-es-sly-slider>
-					<div class="es-mobile-filter-slider__content">
-						<?php foreach ($apps as $app) { ?>
-							<?php echo $this->html('mobile.filterTab', $app->title, FRoute::activities(array('type' => $app->element)), $active == $app->element ? true : false, array('data-sidebar-item', 'data-type="' . $app->element . '"')); ?>
-						<?php } ?>
+			<div class="es-mobile-filter__group t-hidden" data-es-swiper-group data-type="apps">
+				<div class="es-mobile-filter-slider is-end-left" data-es-swiper-slider>
+					<div class="es-mobile-filter-slider__content" data-es-swiper-container>
+						<div class="swiper-wrapper">
+							<?php foreach ($apps as $app) { ?>
+								<?php echo $this->html('mobile.filterTab', $app->title, FRoute::activities(array('type' => $app->element)), $active == $app->element ? true : false, array('data-sidebar-item', 'data-type="' . $app->element . '"', 'title="' . $app->title . '"')); ?>
+							<?php } ?>
+						</div>
 					</div>
 				</div>
 			</div>

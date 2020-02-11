@@ -119,7 +119,8 @@ class SocialPageAppStory extends SocialAppItem
 			$actor = $cluster;
 		}
 
-		$commentContent = ES::string()->parseEmoticons($comment->comment);
+		$parseBBCodeOptions = array('escape' => false, 'links' => true, 'code' => true);
+		$commentContent = ES::string()->normalizeContent($comment->comment, $parseBBCodeOptions);
 
 		$emailOptions = array(
 			'title' => 'APP_PAGE_STORY_EMAILS_COMMENT_ITEM_TITLE_' . strtoupper($stream->post_as),

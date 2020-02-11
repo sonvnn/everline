@@ -184,7 +184,8 @@ class SocialGroupAppNews extends SocialAppItem
 		// Get the cluster
 		$cluster = ES::group($news->cluster_id);
 
-		$commentContent = ES::string()->parseEmoticons($comment->comment);
+		$parseBBCodeOptions = array('escape' => false, 'links' => true, 'code' => true);
+		$commentContent = ES::string()->normalizeContent($comment->comment, $parseBBCodeOptions);
 
 		$emailOptions = array(
 			'title' => 'APP_GROUP_NEWS_EMAILS_COMMENT_ITEM_TITLE',

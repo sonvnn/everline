@@ -11,43 +11,44 @@
 */
 defined('_JEXEC') or die('Unauthorized Access');
 ?>
-<div class="es-list-item es-island" data-item data-id="<?php echo $photo->id;?>">
+<div class="es-list__item">
+	<div class="es-list-item es-island" data-item data-id="<?php echo $photo->id;?>">
 
-	<div class="es-list-item__media">
-		<a href="<?php echo $photo->getPermalink(); ?>" class="o-avatar <?php echo $this->config->get('layout.avatar.style') == 'rounded' ? 'o-avatar--rounded' : '';?>">
-			<img src="<?php echo $photo->getSource(); ?>" title="<?php echo $this->html('string.escape', $photo->_('title')); ?>" />
-		</a>
-	</div>
-	<div class="es-list-item__context">
-		<div class="es-list-item__hd">
-			<div class="es-list-item__content">
+		<div class="es-list-item__media">
+			<a href="<?php echo $photo->getPermalink(); ?>" class="o-avatar <?php echo $this->config->get('layout.avatar.style') == 'rounded' ? 'o-avatar--rounded' : '';?>">
+				<img src="<?php echo $photo->getSource(); ?>" title="<?php echo $this->html('string.escape', $photo->_('title')); ?>" />
+			</a>
+		</div>
+		<div class="es-list-item__context">
+			<div class="es-list-item__hd">
+				<div class="es-list-item__content">
 
-				<div class="es-list-item__title">
-					<a href="<?php echo $photo->getPermalink();?>" class="">
-					<?php echo $photo->_('title'); ?>
-					</a>
+					<div class="es-list-item__title">
+						<a href="<?php echo $photo->getPermalink();?>" class="">
+						<?php echo $photo->_('title'); ?>
+						</a>
+					</div>
+
+					<div class="es-list-item__meta">
+						<ol class="g-list-inline g-list-inline--delimited">
+							<?php if ($displayType) { ?>
+							<li data-breadcrumb="&#183;">
+								<i class="fa fa-image"></i>&nbsp; <?php echo JText::_('COM_ES_PHOTOS');?>
+							</li>
+							<?php } ?>
+							<li>
+						</ol>
+					</div>
 				</div>
 
-				<div class="es-list-item__meta">
-					<ol class="g-list-inline g-list-inline--delimited">
-						<?php if ($displayType) { ?>
-						<li data-breadcrumb="&#183;">
-							<i class="fa fa-image"></i>&nbsp; <?php echo JText::_('COM_ES_PHOTOS');?>
-						</li>
-						<?php } ?>
-						<li>
-					</ol>
+			</div>
+
+			<div class="es-list-item__bd">
+				<div class="es-list-item__desc">
+					<?php echo JText::sprintf('COM_EASYSOCIAL_SEARCH_RESULT_PHOTOS_UPLOADED_ON' , $this->html('string.date' , $photo->finder->publish_start_date , 'COM_EASYSOCIAL_PHOTOS_DATE_FORMAT')); ?>
 				</div>
 			</div>
 
 		</div>
-
-		<div class="es-list-item__bd">
-			<div class="es-list-item__desc">
-				<?php echo JText::sprintf('COM_EASYSOCIAL_SEARCH_RESULT_PHOTOS_UPLOADED_ON' , $this->html('string.date' , $photo->finder->publish_start_date , 'COM_EASYSOCIAL_PHOTOS_DATE_FORMAT')); ?>
-			</div>
-		</div>
-
 	</div>
-
 </div>

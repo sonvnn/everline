@@ -651,7 +651,7 @@ class SocialAlbums extends EasySocial
 			$albumOptions = array_merge($albumOptions, array('photos'));
 		}
 
-		$album = $this->data->export($albumOptions);
+		$album = $this->data->toExportData($viewer, $albumOptions);
 		$album['author'] = $this->data->getCreator()->toExportData($viewer);
 
 		// Re-decorate the photos

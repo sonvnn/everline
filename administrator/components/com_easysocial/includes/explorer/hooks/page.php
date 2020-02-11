@@ -1,7 +1,7 @@
 <?php
 /**
 * @package      EasySocial
-* @copyright    Copyright (C) 2010 - 2016 Stack Ideas Sdn Bhd. All rights reserved.
+* @copyright    Copyright (C) 2010 - 2020 Stack Ideas Sdn Bhd. All rights reserved.
 * @license      GNU/GPL, see LICENSE.php
 * EasySocial is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
@@ -148,11 +148,6 @@ class SocialExplorerHookPage extends SocialExplorerHooks
 	 */
 	public function removeFolder($id = null)
 	{
-		// Check if the user has access to delete files from this page
-		if (!$this->page->isMember()) {
-			return ES::exception(JText::_('COM_EASYSOCIAL_EXPLORER_NO_ACCESS_TO_DELETE_FOLDER'));
-		}
-
 		$id = is_null($id) ? JRequest::getInt('id') : $id;
 
 		if (!$id) {
@@ -161,6 +156,11 @@ class SocialExplorerHookPage extends SocialExplorerHooks
 
 		$collection = ES::table('FileCollection');
 		$collection->load($id);
+
+		// Check if the user has access to delete files from this page
+		if (!$this->hasDeleteFolderAccess($collection)) {
+			return ES::exception(JText::_('COM_EASYSOCIAL_EXPLORER_NO_ACCESS_TO_DELETE_FOLDER'));
+		}	
 
 		// Try to delete the folder
 		if (!$collection->delete()) {
@@ -179,11 +179,6 @@ class SocialExplorerHookPage extends SocialExplorerHooks
 	 */
 	public function removeFile()
 	{
-		// Check if the user has access to delete files from this page
-		if (!$this->page->isMember()) {
-			return ES::exception(JText::_('COM_EASYSOCIAL_EXPLORER_NO_ACCESS_TO_DELETE'));
-		}
-
 		// Get the file id
 		$ids = JRequest::getVar('id');
 		$ids = ES::makeArray($ids);
@@ -198,6 +193,11 @@ class SocialExplorerHookPage extends SocialExplorerHooks
 
 			if (!$id || !$file->id) {
 				return ES::exception(JText::_('COM_EASYSOCIAL_EXPLORER_INVALID_FILE_ID_PROVIDED'));
+			}
+
+			// Check if the user has access to delete this file from this page
+			if (!$this->hasDeleteAccess($file)) {
+				return ES::exception(JText::_('COM_EASYSOCIAL_EXPLORER_NO_ACCESS_TO_DELETE'));
 			}
 
 			$state = $file->delete();

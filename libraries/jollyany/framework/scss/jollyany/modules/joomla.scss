@@ -59,6 +59,19 @@ a.jollyany-login-icon {
     padding: 1.8rem;
   }
 }
+.blog {
+  article.item {
+    .post {
+      &.review, &.quote {
+        .card {
+          border: none;
+          margin-left: 0;
+          margin-right: 0;
+        }
+      }
+    }
+  }
+}
 blockquote {
   p {
     &:last-child {

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="component" version="2.5" method="upgrade">
 	<name>com_easysocial</name>
-	<creationDate>8th January 2020</creationDate>
+	<creationDate>7th February 2020</creationDate>
 	<author>Stack Ideas Sdn Bhd</author>
 	<authorEmail>support@stackideas.com</authorEmail>
 	<authorUrl>http://stackideas.com</authorUrl>
 	<copyright>Copyright 2009 - 2017 Stack Ideas Sdn Bhd. All Rights Reserved.</copyright>
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-	<version>3.2.2</version>
+	<version>3.2.7</version>
 	<description><![CDATA[]]></description>
 	<scriptfile>script.php</scriptfile>
 	<administration>

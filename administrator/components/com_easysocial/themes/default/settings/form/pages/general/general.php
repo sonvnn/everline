@@ -20,6 +20,7 @@ defined('_JEXEC') or die('Unauthorized Access');
 				<?php echo $this->html('settings.toggle', 'friends.enabled', 'COM_EASYSOCIAL_GENERAL_SETTINGS_ENABLE_FRIENDS_SYSTEM'); ?>
 				<?php echo $this->html('settings.toggle', 'friends.invites.enabled', 'COM_EASYSOCIAL_GENERAL_SETTINGS_ALLOW_FRIEND_INVITES'); ?>
 				<?php echo $this->html('settings.toggle', 'followers.enabled', 'COM_EASYSOCIAL_GENERAL_SETTINGS_ENABLE_FOLLOWERS_SYSTEM'); ?>
+				<?php echo $this->html('settings.textbox', 'followers.flood.limit', 'COM_ES_SETTINGS_FOLLOWER_FLOOD_LIMIT', '', array('postfix' => 'Seconds'), '', 'input-short text-center'); ?>
 				<?php echo $this->html('settings.toggle', 'privacy.enabled', 'COM_ES_ENABLE_PRIVACY'); ?>
 				<?php echo $this->html('settings.toggle', 'points.enabled', 'COM_EASYSOCIAL_GENERAL_SETTINGS_ENABLE_POINTS'); ?>
 				<?php echo $this->html('settings.toggle', 'activity.logs.enabled', 'COM_ES_ENABLE_ACTIVITY_LOGS'); ?>
@@ -63,6 +64,10 @@ defined('_JEXEC') or die('Unauthorized Access');
 
 					<div class="col-md-7">
 						<?php echo $this->html('grid.inputbox', 'giphy.apikey', $this->config->get('giphy.apikey'), 'giphy.apikey'); ?>
+
+						<div class="t-lg-mt--md">
+							<?php echo JText::_('COM_ES_SETTINGS_GIPHY_API_KEY_HELP'); ?>
+						</div>
 					</div>
 				</div>
 

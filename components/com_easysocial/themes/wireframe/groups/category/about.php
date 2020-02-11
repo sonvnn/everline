@@ -44,7 +44,7 @@ defined('_JEXEC') or die('Unauthorized Access');
 			<?php } ?>
 		</div>
 		<?php } else { ?>
-		<div>
+		<div class="t-text--muted">
 			<?php echo JText::_('COM_EASYSOCIAL_GROUPS_NO_GROUPS_YET'); ?>
 		</div>
 		<?php } ?>

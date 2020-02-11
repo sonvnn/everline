@@ -1,7 +1,7 @@
 <?php
 /**
 * @package		EasySocial
-* @copyright	Copyright (C) 2010 - 2016 Stack Ideas Sdn Bhd. All rights reserved.
+* @copyright	Copyright (C) 2010 - 2020 Stack Ideas Sdn Bhd. All rights reserved.
 * @license		GNU/GPL, see LICENSE.php
 * EasySocial is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
@@ -688,7 +688,7 @@ class SocialStylesheetLessc {
 
 		// check for a rest
 		$last = end($args);
-		if ($last[0] == "rest") {
+		if (isset($last[0]) && $last[0] == "rest") {
 			$rest = array_slice($orderedValues, count($args) - 1);
 			$this->set($last[1], $this->reduce(array("list", " ", $rest)));
 		}
@@ -774,7 +774,7 @@ class SocialStylesheetLessc {
 					if ($suffix !== null &&
 						$subProp[0] == "assign" &&
 						is_string($subProp[1]) &&
-						$subProp[1]{0} != $this->vPrefix)
+						$subProp[1][0] != $this->vPrefix)
 					{
 						$subProp[2] = array(
 							'list', ' ',
@@ -1909,7 +1909,7 @@ class SocialStylesheetLessc {
 		$this->pushEnv();
 		$parser = new SocialStylesheetLessc_parser($this, __METHOD__);
 		foreach ($args as $name => $strValue) {
-			if ($name{0} != '@') $name = '@'.$name;
+			if ($name[0] != '@') $name = '@'.$name;
 			$parser->count = 0;
 			$parser->buffer = (string)$strValue;
 			if (!$parser->propertyValue($value)) {
@@ -2616,7 +2616,7 @@ class SocialStylesheetLessc_parser {
 				$hidden = true;
 				if (!isset($block->args)) {
 					foreach ($block->tags as $tag) {
-						if (!is_string($tag) || $tag{0} != $this->lessc->mPrefix) {
+						if (!is_string($tag) || $tag[0] != $this->lessc->mPrefix) {
 							$hidden = false;
 							break;
 						}
@@ -2670,7 +2670,7 @@ class SocialStylesheetLessc_parser {
 	protected function fixTags($tags) {
 		// move @ tags out of variable namespace
 		foreach ($tags as &$tag) {
-			if ($tag{0} == $this->lessc->vPrefix)
+			if ($tag[0] == $this->lessc->vPrefix)
 				$tag[0] = $this->lessc->mPrefix;
 		}
 		return $tags;

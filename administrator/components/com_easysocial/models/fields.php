@@ -1,7 +1,7 @@
 <?php
 /**
 * @package		EasySocial
-* @copyright	Copyright (C) 2010 - 2019 Stack Ideas Sdn Bhd. All rights reserved.
+* @copyright	Copyright (C) 2010 - 2020 Stack Ideas Sdn Bhd. All rights reserved.
 * @license		GNU/GPL, see LICENSE.php
 * EasySocial is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
@@ -719,24 +719,39 @@ class EasySocialModelFields extends EasySocialModel
 	 * @since	1.0
 	 * @access	public
 	 * @param	Array	An array of options( 'step_id' , 'profile_id' )
-	 * @return	Mixed	An array of group and field items as it's child items.
+	 * @return	Array	An array of single item or, an associate array with datakey as array index.
 	 *
 	 * @author	Mark Lee <mark@stackideas.com>
 	 */
-	public function getCustomFieldsValue( $fieldId , $uid , $type )
+	public function getCustomFieldsValue($fieldId ,$uid ,$type)
 	{
-		$db 	= FD::db();
-		$sql	= $db->sql();
+		$db = ES::db();
 
-		$sql->select( '#__social_fields_data' );
-		$sql->column( 'data' );
-		$sql->where( 'field_id', $fieldId );
-		$sql->where( 'uid', $uid );
-		$sql->where( 'type', $type );
+		$query = array();
+		$query[] = 'SELECT * FROM ' . $db->nameQuote('#__social_fields_data');
+		$query[] = 'WHERE ' . $db->nameQuote('field_id') . ' = ' . $db->quote($fieldId);
+		$query[] = 'AND ' . $db->nameQuote('uid') . ' = ' . $db->quote($uid);
+		$query[] = 'AND ' . $db->nameQuote('type') . ' = ' . $db->quote($type);
 
-		$db->setQuery( $sql );
+		$query = implode(' ', $query);
 
-		$data		= $db->loadResult();
+		$db->setQuery($query);
+		$rows = $db->loadObjectList();
+
+		if (!$rows) {
+			return;
+		}
+
+		$data = array();
+
+		// Gather all the data of the field into an array
+		foreach ($rows as $row) {
+			if ($row->datakey) {
+				$data[$row->datakey] = $row->data;
+			} else {
+				$data[] = $row->data;
+			}
+		}
 
 		return $data;
 	}
@@ -754,77 +769,76 @@ class EasySocialModelFields extends EasySocialModel
 	 *
 	 * @author	Mark Lee <mark@stackideas.com>
 	 */
-	public function getCustomFieldsForNode( $nodeId , $nodeType )
+	public function getCustomFieldsForNode($nodeId, $nodeType)
 	{
-		$db     	= FD::db();
-		$fields 	= array();
+		$db = ES::db();
+		$fields = array();
 
-		$query 		= array();
-		$query[]	= 'SELECT b.*, c.' . $db->nameQuote( 'element' ) . ' AS element,d.' . $db->nameQuote( 'field_id' ) . ' as smartfield';
+		$query = array();
+		$query[] = 'SELECT b.*, c.' . $db->nameQuote('element') . ' AS element,d.' . $db->nameQuote('field_id') . ' as smartfield';
 
-		$query[]	= 'FROM ' . $db->nameQuote( '#__social_fields_steps' ) . ' AS a';
+		$query[] = 'FROM ' . $db->nameQuote('#__social_fields_steps') . ' AS a';
 
 		// Only want fields from the steps associated to the profile.
-		$query[]	= 'INNER JOIN ' . $db->nameQuote( '#__social_fields' ) . ' AS b';
-		$query[]	= 'ON a.' . $db->nameQuote( 'id' ) . ' = b.' . $db->nameQuote( 'step_id' );
+		$query[] = 'INNER JOIN ' . $db->nameQuote('#__social_fields') . ' AS b';
+		$query[] = 'ON a.' . $db->nameQuote('id') . ' = b.' . $db->nameQuote('step_id');
 
 		// Join with apps table to obtain the element
-		$query[]	= 'INNER JOIN ' . $db->nameQuote( '#__social_apps' ) . ' AS c';
-		$query[]	= 'ON c.' . $db->nameQuote( 'id' ) . ' = b.' . $db->nameQuote( 'app_id' );
+		$query[] = 'INNER JOIN ' . $db->nameQuote('#__social_apps') . ' AS c';
+		$query[] = 'ON c.' . $db->nameQuote('id') . ' = b.' . $db->nameQuote('app_id');
 
 		// Join with rules table.
-		$query[]	= 'LEFT JOIN ' . $db->nameQuote( '#__social_fields_rules' ) . ' AS d';
-		$query[]	= 'ON d.' . $db->nameQuote( 'parent_id' ) . ' = b.' . $db->nameQuote( 'id' );
+		$query[] = 'LEFT JOIN ' . $db->nameQuote('#__social_fields_rules') . ' AS d';
+		$query[] = 'ON d.' . $db->nameQuote('parent_id') . ' = b.' . $db->nameQuote('id');
 
 		// Core fields should not be dependent on the state because it can never be unpublished.
-		$query[]	= 'WHERE(';
-		$query[]	= 'b.' . $db->nameQuote( 'core' ) . '=' . $db->Quote( 1 );
-		$query[]	= 'OR';
-		$query[]	= 'b.' . $db->nameQuote( 'state' ) . '=' . $db->Quote( SOCIAL_STATE_PUBLISHED );
-		$query[]	= ')';
+		$query[] = 'WHERE(';
+		$query[] = 'b.' . $db->nameQuote('core') . '=' . $db->Quote(1);
+		$query[] = 'OR';
+		$query[] = 'b.' . $db->nameQuote('state') . '=' . $db->Quote(SOCIAL_STATE_PUBLISHED);
+		$query[] = ')';
 
 		// Registration field should not select dependant fields by default unless it is selected.
-		$query[]	= 'AND b.' . $db->nameQuote( 'id' ) . ' NOT IN (';
-		$query[]	= 'SELECT ' . $db->nameQuote( 'field_id' ) . ' FROM ' . $db->nameQuote( '#__social_fields_rules' );
-		$query[]	= 'WHERE ' . $db->nameQuote( 'field_id' ) . ' = b.' . $db->nameQuote( 'id' );
-		$query[]	= ')';
+		$query[] = 'AND b.' . $db->nameQuote('id') . ' NOT IN (';
+		$query[] = 'SELECT ' . $db->nameQuote('field_id') . ' FROM ' . $db->nameQuote('#__social_fields_rules');
+		$query[] = 'WHERE ' . $db->nameQuote('field_id') . ' = b.' . $db->nameQuote('id');
+		$query[] = ')';
 
 		// Make sure that the field is set to be visible during registrations.
-		$query[]	= 'AND b.' . $db->nameQuote( 'visible_registration' ) . '=' . $db->Quote( 1 );
+		$query[] = 'AND b.' . $db->nameQuote('visible_registration') . '=' . $db->Quote(1);
 		// $query[]	= 'AND b.' . $db->nameQuote( 'core' ) . '=' . $db->Quote( 1 );
 
 		// Make sure that only visible_registration is enabled only.
 
 
 		// Make sure to load fields that are in the current step only.
-		$query[]	= 'AND a.' . $db->nameQuote( 'workflow_id' ) . '=' . $db->Quote( $nodeId );
-		$query[]	= 'AND a.' . $db->nameQuote( 'type' ) . '=' . $db->Quote( $nodeType );
+		$query[] = 'AND a.' . $db->nameQuote('workflow_id') . '=' . $db->Quote($nodeId);
+		$query[] = 'AND a.' . $db->nameQuote('type') . '=' . $db->Quote($nodeType);
 
 		// Join back the queries.
-		$query 		= implode( ' ' , $query );
+		$query = implode(' ' ,$query);
 
 		// echo str_ireplace( '#__' , 'jos_' , $query );
 		// exit;
 
-		$db->setQuery( $query );
+		$db->setQuery($query);
 
-		$rows	= $db->loadObjectList();
+		$rows = $db->loadObjectList();
 
 		// If there's no fields at all, just skip this whole block.
-		if( !$rows )
-		{
+		if (!$rows) {
 			return false;
 		}
 
-		$fields 	= array();
+		$fields = array();
 
 		// We need to bind the fields with SocialTableField
-		foreach( $rows as $row )
+		foreach($rows as $row)
 		{
-			$field 	= FD::table( 'Field' );
-			$field->bind( $row );
+			$field = ES::table('Field');
+			$field->bind($row);
 
-			$fields[]	= $field;
+			$fields[] = $field;
 		}
 
 		return $fields;

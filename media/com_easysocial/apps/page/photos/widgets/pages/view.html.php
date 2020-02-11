@@ -105,7 +105,7 @@ class PhotosWidgetsPages extends SocialAppsWidgets
 			return;
 		}
 
-		$params = $page->getParams();
+		$params = $this->getParams();
 
 		// Check if the photos widget should appear
 		if (!$params->get('widgets_album', true)) {

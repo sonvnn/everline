@@ -46,6 +46,8 @@ defined('_JEXEC') or die('Unauthorized Access');
 							<div class="o-loader o-loader--sm"></div>
 						</li>
 					<?php } else { ?>
+
+						<?php if ((!$user || ($user && $user->canCreatePages()))) { ?>
 						<li class="o-tabs__item has-notice <?php echo $filter == 'created' && !$activeCategory ? ' active' : '';?>" data-filter-item data-type="created">
 							<a href="<?php echo $filters->created;?>" title="<?php echo JText::_('COM_EASYSOCIAL_PAGES_FILTER_CREATED_PAGES' , true);?>" class="o-tabs__link">
 								<?php echo JText::_('COM_EASYSOCIAL_PAGES_FILTER_CREATED_PAGES');?>
@@ -54,6 +56,7 @@ defined('_JEXEC') or die('Unauthorized Access');
 							<span class="o-tabs__bubble" data-counter><?php echo $counters->created;?></span>
 							<div class="o-loader o-loader--sm"></div>
 						</li>
+						<?php } ?>
 
 						<li class="o-tabs__item has-notice <?php echo $filter == 'participated' && !$activeCategory ? ' active' : '';?>" data-filter-item data-type="participated">
 							<a href="<?php echo $filters->participated;?>" title="<?php echo JText::_('COM_EASYSOCIAL_PAGES_FILTER_PARTICIPATED_PAGES' , true);?>" class="o-tabs__link">
@@ -66,10 +69,12 @@ defined('_JEXEC') or die('Unauthorized Access');
 					<?php } ?>
 
 					<?php if ($showMyPages) { ?>
+						<?php if ((!$user || ($user && $user->isViewer())) && $this->lib->my->canCreatePages()) { ?>
 						<li class="o-tabs__item has-notice <?php echo $filter == 'mine' && !$activeCategory ? ' active' : '';?>" data-filter-item data-type="mine">
 							<a href="<?php echo ESR::pages(array('filter' => 'mine'));?>" title="<?php echo JText::_('COM_EASYSOCIAL_PAGE_TITLE_PAGES_FILTER_MY_PAGES', true);?>" class="o-tabs__link">
 								<?php echo JText::_('COM_EASYSOCIAL_PAGES_FILTER_MY_PAGES');?>
 							</a>
+						<?php } ?>
 
 							<span class="o-tabs__bubble" data-counter><?php echo $counters->created;?></span>
 							<div class="o-loader o-loader--sm"></div>

@@ -394,8 +394,7 @@ class SocialFieldsUserCover extends SocialFieldItem
 			}
 
 			// Construct the path to where the photo is temporarily uploaded.
-			// $tmpPath = SocialFieldsUserCoverHelper::getPath($this->inputName);
-			$tmpPath = dirname($coverObj->original->path);
+			$tmpPath = SocialFieldsUserCoverHelper::getPath($this->inputName);
 
 			// Get the supposed path of where the cover should be
 			// Instead of doing SocialPhotos::getStoragePath, I copied the logic from there but only to create the folders up until albumId section.

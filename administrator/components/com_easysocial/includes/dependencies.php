@@ -49,16 +49,49 @@ if (!function_exists('pdump')) {
 	}
 }
 
-class EasySocial
-{
-	public $config = null;
-	public $jConfig = null;
-	public $app = null;
-	public $input = null;
-	public $my = null;
-	public $doc = null;
-	public $access = null;
 
+// check if current request is a REST request or not.
+$rest = false;
+if (!defined('SOCIAL_COMPONENT_CLI')) {
+	$rest = JFactory::getApplication()->input->get('rest', false, 'bool');
+}
+
+if ($rest === true) {
+	class EasySocialWrapper
+	{
+		protected $config = null;
+		protected $jConfig = null;
+		protected $app = null;
+		protected $input = null;
+		protected $my = null;
+		protected $doc = null;
+
+		public function __construct() 
+		{
+
+		}
+	}
+} else {
+	class EasySocialWrapper
+	{
+		public $config = null;
+		public $jConfig = null;
+		public $app = null;
+		public $input = null;
+		public $my = null;
+		public $doc = null;
+
+		public function __construct() 
+		{
+
+		}
+	}
+}
+
+
+class EasySocial extends EasySocialWrapper
+{
+	public $access = null;
 	protected $error = null;
 
 	public function __construct()

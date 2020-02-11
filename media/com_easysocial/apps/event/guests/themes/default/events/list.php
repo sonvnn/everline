@@ -55,7 +55,7 @@ defined('_JEXEC') or die('Unauthorized Access');
 	<?php if ($guests) { ?>
 		<?php foreach ($guests as $guest) { ?>
 		<div class="es-list__item">
-			<div class="es-list-item es-island" data-item data-id="<?php echo $guest->id;?>" data-return="<?php echo $returnUrl;?>">
+			<div class="es-list-item es-island" data-item data-id="<?php echo $guest->id;?>" data-user-id="<?php echo $guest->user->id; ?>" data-return="<?php echo $returnUrl;?>">
 
 				<?php if ($filter == 'pending') { ?>
 					<div class="es-list-item__checkbox">

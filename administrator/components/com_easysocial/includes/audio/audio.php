@@ -1141,7 +1141,7 @@ class SocialAudio extends EasySocial
 		$tmpPath = dirname($albumartObj->original->path);
 
 		// We want to only get the thumbnail version
-		$thumbnailPath = $albumartObj->thumbnail->path;
+		$thumbnailPath = JPATH_ROOT . $albumartObj->thumbnail->path;
 		$thumbnailFile =  md5($albumartObj->thumbnail->file) . '.jpg';
 
 		if (JFile::exists($thumbnailPath)) {
@@ -1155,7 +1155,7 @@ class SocialAudio extends EasySocial
 				$this->table->store();
 
 				// Once done, we delete the tmp folder
-				JFolder::delete($tmpPath);
+				JFolder::delete(JPATH_ROOT . $tmpPath);
 			}
 
 			// If the audio storage is not joomla,
@@ -1752,6 +1752,19 @@ class SocialAudio extends EasySocial
 
 		if (!$desc && $showDefault) {
 			return JText::_('COM_ES_AUDIO_NO_DESCRIPTION_AVAILABLE');
+		}
+
+		$isRestApi = ES::input()->get('rest', false, 'bool');
+
+		// If this coming from REST, skip the nl2br process.
+		// https://git.stackideas.com/stackideas/easysocial-mobile/issues/209
+		if ($isRestApi) {
+			return $desc;
+		}
+
+		// Only process this if the description doesn't have those HTML tag
+		if (strpos($desc, '<p>') === false && strpos($desc, '<br />') === false && strpos($desc, '<br>') === false) {
+			$desc = nl2br($desc);
 		}
 
 		return $desc;

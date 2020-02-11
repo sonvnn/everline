@@ -1,9 +1,9 @@
 <?php
 /**
 * @package		EasySocial
-* @copyright	Copyright (C) 2010 - 2017 Stack Ideas Sdn Bhd. All rights reserved.
+* @copyright	Copyright (C) 2010 - 2020 Stack Ideas Sdn Bhd. All rights reserved.
 * @license		GNU/GPL, see LICENSE.php
-* EasySocial is free software. This version may have been modified pursuant
+* PayPlans is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
 * is derivative of works licensed under the GNU General Public License or
 * other free or open source software licenses.
@@ -53,7 +53,7 @@ defined('_JEXEC') or die('Unauthorized Access');
 
 					<?php if ($totalPending > 0) { ?>
 					<div class="tab-pane" id="pending-tabs">
-						<?php echo $this->loadTemplate('admin/easysocial/widgets/pending.users' , array( 'pendingUsers' => $pendingUsers ) ); ?>
+						<?php echo $this->loadTemplate('admin/easysocial/widgets/pending.users', array('pendingUsers' => $pendingUsers, 'totalPending' => $totalPending)); ?>
 					</div>
 					<?php } ?>
 

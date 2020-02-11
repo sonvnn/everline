@@ -1409,10 +1409,8 @@ class SocialTablePhoto extends SocialTable implements ISocialIndexerTable, ISoci
 	 *
 	 * @since   1.0
 	 * @access  public
-	 * @param   string
-	 * @return
 	 */
-	public function getPath($type, $relative = false)
+	public function getPath($type, $relative = false, $reset = false)
 	{
 		static $paths = array();
 
@@ -1426,7 +1424,7 @@ class SocialTablePhoto extends SocialTable implements ISocialIndexerTable, ISoci
 
 		$key = $this->id . $type . (int) $relative;
 
-		if (!isset($paths[$key])) {
+		if (!isset($paths[$key]) || $reset) {
 			$model = ES::model('Photos');
 
 			// Retrieve information about the photo
@@ -1972,9 +1970,32 @@ class SocialTablePhoto extends SocialTable implements ISocialIndexerTable, ISoci
 	 * @since   3.1.0
 	 * @access  public
 	 */
-	public function export($flags = array())
+
+	public function export()
 	{
-		return $this->toExportData(ES::user(), $flags);
+		$properties = get_object_vars($this);
+
+		$photo = array();
+
+		foreach ($properties as $key => $value) {
+			if ($key[0] != '_') {
+				$photo[$key] = $value;
+			}
+		}
+
+		$photo['sizes'] = array();
+
+		$arraySize = array('large', 'square', 'thumbnail', 'featured', 'original', 'stock');
+
+		foreach ($arraySize as $size) {
+			$photo['sizes'][$size] = array();
+
+			$photo['sizes'][$size]['url'] = $this->getSource($size);
+		}
+
+		$photo['permalink'] = $this->getPermalink();
+
+		return $photo;
 	}
 
 	/**

@@ -18,7 +18,7 @@ EasySocial.require()
 
 			<?php if ($options['canUpload']) { ?>
 			"uploader": {
-				direction: "<?php echo $photoOrdering === 'desc' ? 'append' : 'prepend'; ?>",
+				direction: "<?php echo $photoOrdering === 'desc' ? 'prepend' : 'append'; ?>",
 				"settings": {
 					url: "<?php echo $uploadUrl ?>",
 					max_file_size: "<?php echo $lib->getUploadLimit(); ?>",

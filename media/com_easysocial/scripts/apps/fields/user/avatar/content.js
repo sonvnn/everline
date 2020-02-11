@@ -104,10 +104,10 @@ EasySocial.Controller('Field.Avatar', {
 		}, {
 			type: "iframe"
 		})
-		.done(function(raw, uri, path) {
+		.done(function(filename, uri, path) {
 
 			// Set the name of the image
-			self.avatarName().val(raw.name);
+			self.avatarName().val(filename);
 
 			// Set the source of the image
 			self.avatarSource().val(uri);

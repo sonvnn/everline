@@ -119,6 +119,10 @@ class EasySocialControllerVideos extends EasySocialController
 
 		if ($filter && !$category) {
 			$pagination->setVar('filter' , $filter);
+
+			$user = ES::user($uid);
+			$pagination->setVar('uid', $user->getAlias());
+			$pagination->setVar('type', $type);
 		}
 
 		$activeCategory = false;
@@ -129,7 +133,9 @@ class EasySocialControllerVideos extends EasySocialController
 
 			$activeCategory = $videoCategory;
 
-			$pagination->setVar('uid', $uid);
+			$user = ES::user($uid);
+			$pagination->setVar('uid', $user->getAlias());
+
 			$pagination->setVar('type', $type);
 			$pagination->setVar('categoryId' , $videoCategory->getAlias());
 		}

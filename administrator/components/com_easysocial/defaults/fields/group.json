@@ -115,8 +115,8 @@
 			},
 			{
 				"element" : "tasks",
-				"title" : "COM_ES_FIELDS_EVENT_TASKS",
-				"description" : "COM_ES_FIELDS_EVENT_TASKS_DESC",
+				"title" : "COM_ES_FIELDS_GROUP_TASKS",
+				"description" : "COM_ES_FIELDS_GROUP_TASKS_DESC",
 				"required" : false,
 				"default" : true,
 				"display_title" : true,

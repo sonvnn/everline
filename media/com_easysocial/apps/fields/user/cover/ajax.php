@@ -12,7 +12,7 @@
 defined('_JEXEC') or die('Unauthorized Access');
 
 // Include the fields library
-FD::import('admin:/includes/fields/dependencies');
+ES::import('admin:/includes/fields/dependencies');
 
 require_once(dirname(__FILE__) . '/helper.php');
 
@@ -35,7 +35,7 @@ class SocialFieldsUserCover extends SocialFieldItem
 	public function upload()
 	{
 		// Get the ajax library
-		$ajax = FD::ajax();
+		$ajax = ES::ajax();
 		$tmp = JRequest::getVar($this->inputName, '', 'FILES');
 
 		$file = array();
@@ -48,7 +48,7 @@ class SocialFieldsUserCover extends SocialFieldItem
 		}
 
 		// Get user access
-		$access = FD::access($this->uid, SOCIAL_TYPE_PROFILES);
+		$access = ES::access($this->uid, SOCIAL_TYPE_PROFILES);
 
 		// We need to perform sanity checking here
 		$options = array('name' => $this->inputName, 'maxsize' => $access->get('photos.uploader.maxsize') . 'M', 'multiple' => true);
@@ -77,7 +77,7 @@ class SocialFieldsUserCover extends SocialFieldItem
 	public function createCover($file, $inputName)
 	{
 		// Load our own image library
-		$image = FD::image();
+		$image = ES::image();
 
 		// Generates a unique name for this image.
 		$name = $file['name'];
@@ -94,16 +94,15 @@ class SocialFieldsUserCover extends SocialFieldItem
 
 		// Get the storage path
 		$storage = SocialFieldsUserCoverHelper::getStoragePath($inputName);
+		$tmpUri = SocialFieldsUserCoverHelper::getStorageURI($inputName);
 
 		// Create a new avatar object.
-		$photos = FD::get('Photos', $image);
+		$photos = ES::get('Photos', $image);
 
 		// Create avatars
 		$sizes = $photos->create($storage);
 
 		// We want to format the output to get the full absolute url.
-		$base = basename($storage);
-
 		$result = array();
 
 		foreach ($sizes as $size => $value) {
@@ -111,8 +110,8 @@ class SocialFieldsUserCover extends SocialFieldItem
 
 			$row->title	= $file['name'];
 			$row->file = $value;
-			$row->path = JPATH_ROOT . '/media/com_easysocial/tmp/' . $base . '/' . $value;
-			$row->uri = rtrim(JURI::root(), '/') . '/media/com_easysocial/tmp/' . $base . '/' . $value;
+			$row->path = $value;
+			$row->uri = $tmpUri . '/' . $value;
 
 			$result[$size] = $row;
 		}

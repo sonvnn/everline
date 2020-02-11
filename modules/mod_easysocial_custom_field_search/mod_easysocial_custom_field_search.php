@@ -1,7 +1,7 @@
 <?php
 /**
 * @package      EasySocial
-* @copyright    Copyright (C) 2010 - 2018 Stack Ideas Sdn Bhd. All rights reserved.
+* @copyright    Copyright (C) 2010 - 2020 Stack Ideas Sdn Bhd. All rights reserved.
 * @license      GNU/GPL, see LICENSE.php
 * EasySocial is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
@@ -26,7 +26,8 @@ require_once($engine);
 $jinput = JFactory::getApplication()->input;
 $type = $params->get('searchtype', 'user');
 $view = $jinput->get('view', false, 'default');
-$viewType = $jinput->get('type', '', 'default');
+$viewType = $jinput->get('type', 'user', 'default');
+$modid = $jinput->get('modid', 0, 'int');
 $searchType = $type . 's';
 
 if ($view == 'search' && $viewType != $type) {
@@ -68,29 +69,43 @@ $values['conditions'] = $jinput->get('conditions', null, 'default');
 
 $userData = array();
 
-if ($values['criterias']) {
-	for ($i = 0; $i < count($values['criterias']); $i++) {
-		$criteria = $values['criterias'][$i];
-		$condition = $values['conditions'][$i];
-		$datakey = $values['datakeys'][$i];
+if ($values['criterias'] && $modid == $module->id) {
 
-		$field  = explode('|', $criteria);
+	// count the same criteria occurance
+	$occurances = array_count_values($values['criterias']);
 
-		$fieldCode = $field[0];
-		$fieldType = $field[1];
+	foreach ($occurances as $key => $occur) {
 
-		$userData[$fieldType]['condition'] = $condition;
+		$oConditions = array();
+
+		// group the condition values
+		for ($i = 0; $i < count($values['criterias']); $i++) {
+			$criteria = $values['criterias'][$i];
+			$condition = $values['conditions'][$i];
+
+			if ($criteria == $key) {
+				$oConditions[] = $condition;
+			}
+		}
+
+		$userData[$key]['condition'] = implode('|', $oConditions);
 	}
 }
 
+
 foreach ($fields as $field) {
 
-	$params = ES::registry($field->params);
-	$placeholder = $params->get('placeholder');
+	$fieldParam = ES::registry($field->params);
+	$placeholder = $fieldParam->get('placeholder', '');
 
-	$field->data = (isset($userData[$field->element]['condition'])) ? $userData[$field->element]['condition'] : '';
+	$criteria = $field->unique_key . '|'. $field->element;
+
+	$field->data = (isset($userData[$criteria]['condition'])) ? $userData[$criteria]['condition'] : '';
 
 	$field->checkedItems = explode('|', $field->data);
+
+	$field->placeholder = $placeholder;
+
 
 	$fieldParams = json_decode($field->params);
 }

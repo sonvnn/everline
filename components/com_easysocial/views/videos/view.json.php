@@ -31,8 +31,14 @@ class EasySocialViewVideos extends EasySocialSiteView
 			return $this->json->send($response);
 		}
 
+		$videoData = new stdClass();
+		$videoData->id = $video->table->id;
+		$videoData->title = $video->table->title;
+		$videoData->description = $video->table->description;
+		$videoData->link = '';
+
 		$response->error = false;
-		$response->data = $video->export();
+		$response->data = $videoData;
 		$response->thumbnail = $video->getThumbnail();
 		$response->html = $video->getEmbedCodes();
 

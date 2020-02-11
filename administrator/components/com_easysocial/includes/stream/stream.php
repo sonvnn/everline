@@ -1636,7 +1636,8 @@ class SocialStream extends EasySocial
 			if ($result) {
 				$requireSearch = $this->format($result, $context, $viewerId, true, $defaultEvent, $displayOptions, $limit);
 
-				if ($requireSearch) {
+				if ($requireSearch && is_array($requireSearch)) {
+
 					// this is abit different since the limit is 50. we need to recalculate the next date limit
 					foreach ($requireSearch as $item) {
 

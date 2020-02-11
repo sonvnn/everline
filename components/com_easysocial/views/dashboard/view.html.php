@@ -119,11 +119,18 @@ class EasySocialViewDashboard extends EasySocialSiteView
 		// Set Meta data
 		ES::setMeta();
 
+		// Render the hashtag filter header
+		$streamFilter = ES::streamFilter(SOCIAL_TYPE_USER, false);
+
 		// Determine if the current request is for "tags"
 		$hashtag = $this->input->get('tag', '', 'default');
 
 		if (!empty($hashtag)) {
+
 			$filter = 'hashtag';
+
+			// Render the hashtag filter
+			$streamFilter->setActiveHashtag($hashtag, $hashtag);
 		}
 
 		// Define page properties
@@ -151,6 +158,7 @@ class EasySocialViewDashboard extends EasySocialSiteView
 		// Ensure that the return url is always encoded correctly.
 		$return = base64_encode($return);
 
+		$this->set('streamFilter', $streamFilter);
 		$this->set('filter', $filter);
 		$this->set('hashtag', $hashtag);
 		$this->set('return', $return);

@@ -24,14 +24,19 @@ defined('_JEXEC') or die('Unauthorized Access');
 	<?php echo $pagination->getListFooter('site');?>
 
 	<?php if (!$albums) { ?>
-	<div class="content-hint no-albums-hint">
-		<?php echo JText::_('COM_EASYSOCIAL_NO_ALBUM_AVAILABLE_' . strtoupper($filter)); ?>
+		<div class="is-empty">
+			<div class="o-empty es-island">
+				<div class="o-empty__content">
+					<i class="o-empty__icon far fa-images"></i>
+					<div class="o-empty__text"><?php echo JText::_('COM_EASYSOCIAL_NO_ALBUM_AVAILABLE_' . strtoupper($filter)); ?></div>
 
-		<?php if ($filter != 'favourite') { ?>
-		<div>
-			<a href="<?php echo $lib->getCreateLink();?>" class="btn btn-es-primary btn-large"><?php echo JText::_('COM_EASYSOCIAL_ALBUMS_CREATE_ALBUM'); ?></a>
+					<?php if ($lib->canCreateAlbums()) { ?>
+					<div class="o-empty__action">
+						<a class="btn btn-es-primary btn-large" href="<?php echo $lib->getCreateLink();?>"><?php echo JText::_('COM_EASYSOCIAL_ALBUMS_CREATE_ALBUM'); ?></a>
+					</div>
+					<?php } ?>
+				</div>
+			</div>
 		</div>
-		<?php } ?>
-	</div>
 	<?php } ?>
 </div>

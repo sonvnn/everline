@@ -2933,24 +2933,37 @@ class SocialEvent extends SocialCluster
 	 * @since	3.2.0
 	 * @access	public
 	 */
-	public function promoteUser($userId)
+	public function promoteUser($targetId, $isGuestId = false)
 	{
 		if (!$this->isAdmin() && !$this->my->isSiteAdmin()) {
 			return false;
 		}
 
+		$options = array('type' => SOCIAL_TYPE_USER, 'cluster_id' => $this->id);
+
+		if ($isGuestId) {
+			$options['id'] = $targetId;
+		} else {
+			$options['uid'] = $targetId;
+		}
+
 		$guest = ES::table('EventGuest');
-		$state = $guest->load(array('uid' => $userId, 'type' => SOCIAL_TYPE_USER, 'cluster_id' => $this->id));
+		$state = $guest->load($options);
 
 		if (!$state || empty($guest->id)) {
 			return false;
 		}
 
+		// If the guest is pending user, we'll need to approve their application before promoting as admin.
+		if ($guest->isPending()) {
+			$guest->approve();
+		}
+
 		$guest->makeAdmin();
 
 		// reload the cache
-		if (isset($this->guests[$userId])) {
-			$this->guests[$userId] = $guest;
+		if (isset($this->guests[$targetId])) {
+			$this->guests[$targetId] = $guest;
 		}
 
 		return true;
@@ -3028,7 +3041,7 @@ class SocialEvent extends SocialCluster
 		}
 
 		$state = $node->reject();
-		
+
 		return $state;
 	}
 }

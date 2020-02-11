@@ -306,7 +306,7 @@ class SocialTableAlbum extends SocialTable
 		$isNew 	= $this->id ? false : true;
 
 		// always set the chk_access to 1
-		// so that new photos created after 3.1 
+		// so that new photos created after 3.1
 		// will not need to re-run the
 		// privacy access migration.
 		$this->chk_access = 1;
@@ -1196,7 +1196,7 @@ class SocialTableAlbum extends SocialTable
 	public function hasPassword()
 	{
 		return $this->password;
-	} 
+	}
 
 	/**
 	 * Retrieves the permalink for the album
@@ -1334,9 +1334,15 @@ class SocialTableAlbum extends SocialTable
 	 * @since	3.1.0
 	 * @access	public
 	 */
+	/**
+	 *
+	 * @since	1.0
+	 * @access	public
+	 */
 	public function export($flags = array())
 	{
 		$properties = get_object_vars($this);
+
 		$album = array();
 
 		foreach ($properties as $key => $value) {
@@ -1345,7 +1351,7 @@ class SocialTableAlbum extends SocialTable
 			}
 		}
 
-		$album['permalink'] = $this->getPermalink(true, true);
+		$album['permalink'] = $this->getPermalink(false);
 
 		if (in_array('cover', $flags)) {
 			if ($this->hasCover()) {
@@ -1368,13 +1374,11 @@ class SocialTableAlbum extends SocialTable
 
 			if ($result) {
 				foreach ($result as $photo) {
-					$album['photos'][] = $photo->export($flags);
+					$album['photos'][] = $photo->export();
 				}
 			}
-		}
 
-		$album['title'] = JText::_($album['title']);
-		$album['caption'] = JText::_($album['caption']);
+		}
 
 		return $album;
 	}
@@ -1385,9 +1389,54 @@ class SocialTableAlbum extends SocialTable
 	 * @since	3.1.0
 	 * @access	public
 	 */
-	public function toExportData(SocialUser $viewer)
+	public function toExportData(SocialUser $viewer, $flags = array())
 	{
-		$album = $this->export(array('cover'));
+		$config = ES::config();
+		$isPrivacyRequired = $config->get('privacy.enabled', true);
+
+		$properties = get_object_vars($this);
+		$album = array();
+
+		foreach ($properties as $key => $value) {
+			if ($key[0] != '_') {
+				$album[$key] = $value;
+			}
+		}
+
+
+		$album['cover'] = array();
+
+		if ($this->hasCover()) {
+			$cover = ES::table('photo');
+			$cover->load($this->cover_id);
+
+			$doExport = ($isPrivacyRequired && !$cover->viewable()) ? false : true;
+			if ($doExport) {
+				$album['cover'] = $cover->toExportData($viewer);
+			} else {
+				$album['cover_id'] = 0;
+			}
+		}
+
+
+		if (in_array('photos', $flags)) {
+			$album['photos'] = array();
+
+			$model = ES::model('Photos');
+
+			$result = $model->getPhotos(array('album_id' => $this->id , 'pagination' => false));
+			$album['photos'] = array();
+
+			if ($result) {
+				foreach ($result as $photo) {
+
+					$doExport = ($isPrivacyRequired && !$photo->viewable()) ? false : true;
+					if ($doExport) {
+						$album['photos'][] = $photo->toExportData($viewer, $flags);
+					}
+				}
+			}
+		}
 
 		$album['title'] = JText::_($album['title']);
 		$album['author'] = $this->getCreator()->toExportData($viewer);
@@ -1397,7 +1446,7 @@ class SocialTableAlbum extends SocialTable
 
 		$album['photos'] = array('total' => (string) $this->getTotalPhotos());
 
-		$album = (object) $album;
+		// $album = (object) $album;
 
 		return $album;
 	}

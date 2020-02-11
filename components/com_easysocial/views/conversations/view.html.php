@@ -1,7 +1,7 @@
 <?php
 /**
 * @package		EasySocial
-* @copyright	Copyright (C) 2010 - 2017 Stack Ideas Sdn Bhd. All rights reserved.
+* @copyright	Copyright (C) 2010 - 2020 Stack Ideas Sdn Bhd. All rights reserved.
 * @license		GNU/GPL, see LICENSE.php
 * EasySocial is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
@@ -81,6 +81,8 @@ class EasySocialViewConversations extends EasySocialSiteView
 		$lastCreatorUserId = null;
 		$lastCreatorUserEmail = null;
 		$lastCreatorExist = false;
+
+		$isListing = !$id ? true : false;
 
 		// If there was an id, we know the user wants to view an active conversation
 		if ($id) {
@@ -162,6 +164,7 @@ class EasySocialViewConversations extends EasySocialSiteView
 		$this->set('lastCreatorUserEmail', $lastCreatorUserEmail);
 		$this->set('lastCreatorExist', $lastCreatorExist);
 		$this->set('access', $access);
+		$this->set('isListing', $isListing);
 
 		// calcuate the nextlimit for conversations
 		$nextlimit = -1;
@@ -241,6 +244,7 @@ class EasySocialViewConversations extends EasySocialSiteView
 		$this->set('active', 'archives');
 		$this->set('pagination', $pagination);
 		$this->set('isArchive', true);
+		$this->set('isListing', true);
 
 		echo parent::display('site/conversations/default/default');
 	}

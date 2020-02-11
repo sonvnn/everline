@@ -628,8 +628,13 @@ class Mysql extends Base
 				$this->nextTable = '';
 				$this->nextRange = 0;
 
-				// At the end of the database dump, if any query was longer than 1Mb, let's put a warning file in the installation folder
-				if ($this->largest_query >= 1024 * 1024)
+				/**
+				 * At the end of the database dump, if any query was longer than 1Mb, let's put a warning file in the
+				 * installation folder, but ONLY if the backup is not a SQL-only backup (which has no backup archive).
+				 */
+				$isSQLOnly = $configuration->get('akeeba.basic.backup_type') == 'dbonly';
+
+				if (!$isSQLOnly && ($this->largest_query >= 1024 * 1024))
 				{
 					$archive = Factory::getArchiverEngine();
 					$archive->addFileVirtual('large_tables_detected', $this->installerSettings->installerroot, $this->largest_query);

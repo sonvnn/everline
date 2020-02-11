@@ -1349,7 +1349,7 @@ class EasySocialControllerPages extends EasySocialController
 		$featuredPages = array();
 		$category = null;
 
-		if ($activeUserId && $filter != 'participated') {
+		if ($activeUserId && ($filter != 'participated' && $filter != 'invited')) {
 			$options['uid'] = $activeUserId;
 		}
 

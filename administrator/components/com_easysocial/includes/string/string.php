@@ -1,7 +1,7 @@
 <?php
 /**
 * @package		EasySocial
-* @copyright	Copyright (C) 2010 - 2017 Stack Ideas Sdn Bhd. All rights reserved.
+* @copyright	Copyright (C) 2010 - 2020 Stack Ideas Sdn Bhd. All rights reserved.
 * @license		GNU/GPL, see LICENSE.php
 * EasySocial is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
@@ -623,11 +623,7 @@ class SocialString
 
 			if ($tag->type == 'hashtag') {
 
-				$alias = JFilterOutput::stringURLSafe($tag->title);
-
-				if (!$alias) {
-					$alias = JFilterOutput::stringURLUnicodeSlug($tag->title);
-				}
+				$alias = $tag->title;
 
 				$url = ESR::dashboard(array('layout' => 'hashtag' , 'tag' => $alias));
 
@@ -875,5 +871,26 @@ class SocialString
 		}
 
 		return $truncate;
+	}
+
+	/**
+	 * Method to parse the bbcode and emoticon
+	 *
+	 * @since	3.2.6
+	 * @access	public
+	 */
+	public function normalizeContent($content, $parseBBCodeOptions = array(), &$parseBBCodeStreamTags = false, $parseEmoticonsReplaceWithCharacter = '')
+	{
+		if (!$content) {
+			return;
+		}
+
+		// Parse emoticons from content
+		$content = $this->parseEmoticons($content, $parseEmoticonsReplaceWithCharacter);
+
+		// Parse bbcode from content
+		$content = $this->parseBBCode($content, $parseBBCodeOptions, $parseBBCodeStreamTags);
+
+		return $content;
 	}
 }

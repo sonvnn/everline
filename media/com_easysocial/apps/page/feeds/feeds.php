@@ -206,7 +206,8 @@ class SocialPageAppFeeds extends SocialAppItem
 		// Load the page
 		$page = ES::page($stream->cluster_id);
 
-		$commentContent = ES::string()->parseEmoticons($comment->comment);
+		$parseBBCodeOptions = array('escape' => false, 'links' => true, 'code' => true);
+		$commentContent = ES::string()->normalizeContent($comment->comment, $parseBBCodeOptions);
 
 		// Set the email options
 		$emailOptions = array(

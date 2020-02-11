@@ -228,6 +228,9 @@ class EasySocialModelUrls extends EasySocialModel
 			$alias = $parts[0];
 
 			$query = "select `id` from `#__menu` where `alias` = " . $db->Quote($alias);
+			$query .= " and `published` = " . $db->Quote(1);
+			$query .= " and `link` LIKE " . $db->Quote('%option=com_easysocial%');
+
 			$db->setQuery($query);
 
 			$id = $db->loadResult();

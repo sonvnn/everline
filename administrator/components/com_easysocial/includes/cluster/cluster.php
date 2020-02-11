@@ -2229,7 +2229,7 @@ abstract class SocialCluster
 			$userId = ES::user()->id;
 		}
 
-		if (!$this->isOwner($userId) && !$this->isAdmin($userId) && !$user->isSiteAdmin()) {
+		if (!$this->isOwner($userId) && !$this->isAdmin($userId) && !ES::user($userId)->isSiteAdmin()) {
 			return false;
 		}
 
@@ -2823,6 +2823,18 @@ abstract class SocialCluster
 	public function getDescription()
 	{
 		$content = JText::_($this->description);
+
+		$isRestApi = ES::input()->get('rest', false, 'bool');
+
+		// If this coming from REST, skip the nl2br process.
+		// https://git.stackideas.com/stackideas/easysocial-mobile/issues/209
+		if ($isRestApi) {
+
+			$breaks = array("<br />","<br>","<br/>");
+			$content = str_ireplace($breaks, "\r\n", $content);
+
+			return strip_tags($content);
+		}
 
 		// lets detect if the content has html tag or not.
 		if (strpos($content, '<p>') === false && strpos($content, '<br />') === false && strpos($content, '<br>') === false) {
@@ -3585,8 +3597,8 @@ abstract class SocialCluster
 			'address' => $this->address,
 			'latitude' => $this->latitude,
 			'longitude' => $this->longitude,
-			'addressLink' => $this->getAddressLink()
-
+			'addressLink' => $this->getAddressLink(),
+			'canPostStory' => $this->canViewStoryForm($viewer)
 		);
 
 		if ($this->getType() !== SOCIAL_TYPE_EVENT) {

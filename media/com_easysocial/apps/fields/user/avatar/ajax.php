@@ -73,7 +73,7 @@ class SocialFieldsUserAvatar extends SocialFieldItem
 
 		$tmpUri = SocialFieldsUserAvatarHelper::getStorageURI($this->inputName);
 
-		return $this->ajax->resolve($file, $tmpUri . '/' . $tmpName, $tmpPath . '/' . $tmpName);
+		return $this->ajax->resolve($file['name'], $tmpUri . '/' . $tmpName, $tmpName);
 	}
 
 	/**

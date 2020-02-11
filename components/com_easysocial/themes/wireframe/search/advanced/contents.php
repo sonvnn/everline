@@ -23,7 +23,7 @@ defined('_JEXEC') or die('Unauthorized Access');
 	<?php } ?>
 
 	<div class="es-adv-search2 es-island <?php echo $results || $activeFilter ? 't-hidden' : '';?>" data-search-form>
-		<form name="frmAdvSearch" method="post" action="<?php echo ESR::search($routerSegment); ?>" data-form>
+		<form name="frmAdvSearch" method="post" action="<?php echo ESR::search($routerSegment); ?>" data-form class="es-forms">
 			<div class="es-search-criteria t-lg-mb--xl" data-criterias>
 				<?php echo $criteriaHTML; ?>
 			</div>

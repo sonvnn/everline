@@ -40,7 +40,12 @@ class Pcloud extends Base
 
 	public function __construct()
 	{
-		$this->supportsDownloadToBrowser = true;
+		/**
+		 * Download to browser: only works when API call is made from the same IP the file will be downloaded from.
+		 * Delete: No problem.
+		 * Download to file: It's like download to browser but by definition our IPs match.
+		 */
+		$this->supportsDownloadToBrowser = false;
 		$this->supportsDelete            = true;
 		$this->supportsDownloadToFile    = true;
 	}

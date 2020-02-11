@@ -11,14 +11,14 @@
 */
 defined('_JEXEC') or die('Unauthorized Access');
 
-FD::import('fields:/user/cover/ajax');
+ES::import('fields:/user/cover/ajax');
 
 class SocialFieldsEventCover extends SocialFieldsUserCover
 {
 	public function upload()
 	{
 		// Get the ajax library
-		$ajax = FD::ajax();
+		$ajax = ES::ajax();
 
 		$tmp = JRequest::getVar($this->inputName , '' , 'FILES');
 
@@ -32,13 +32,13 @@ class SocialFieldsEventCover extends SocialFieldsUserCover
 		}
 
 		// Get user access
-		$access = FD::access($this->uid , SOCIAL_TYPE_CLUSTERS);
+		$access = ES::access($this->uid , SOCIAL_TYPE_CLUSTERS);
 
-        // We need to perform sanity checking here
-        $options = array('name' => $this->inputName, 'maxsize' => $access->get('photos.maxsize') . 'M', 'multiple' => true);
+		// We need to perform sanity checking here
+		$options = array('name' => $this->inputName, 'maxsize' => $access->get('photos.maxsize') . 'M', 'multiple' => true);
 
-        $uploader = ES::uploader($options);
-        $file = $uploader->getFile(null, 'image');
+		$uploader = ES::uploader($options);
+		$file = $uploader->getFile(null, 'image');
 
 		$result = $this->createCover($file , $this->inputName);
 

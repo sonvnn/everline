@@ -169,7 +169,13 @@ class EasySocialModelAlert extends EasySocialModel
 		$search = $this->getState('search');
 
 		if ($search) {
-			$sql->where('rule', '%' . $search . '%', 'LIKE');
+			$words = explode(' ', $search);
+			foreach ($words as $word) {
+				$sql->where('(', '', '', 'AND');
+				$sql->where('element', '%' . $word . '%', 'LIKE');
+				$sql->where('rule', '%' . $word . '%', 'LIKE', 'OR');
+				$sql->where(')');
+			}
 		}
 
 		$limit = $this->getState('limit', 0);

@@ -643,6 +643,11 @@ class EasySocialModelPhotos extends EasySocialModel
 
 		$storage = isset($options['storage']) ? $options['storage'] : '';
 		$pagination = isset($options['pagination']) ? $options['pagination'] : true;
+
+		if (!$limit) {
+			$pagination = false;
+		}
+
 		$exclusion = isset($options['exclusion']) ? $options['exclusion'] :'';
 		$inclusion = isset($options['inclusion']) ? $options['inclusion'] :'';
 		$privacy = isset($options['privacy']) ? $options['privacy'] :'';
@@ -818,6 +823,7 @@ class EasySocialModelPhotos extends EasySocialModel
 		}
 
 		$query = implode(' ', $query);
+
 		$sql->raw($query);
 
 		// echo $sql;

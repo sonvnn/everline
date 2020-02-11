@@ -947,7 +947,9 @@ class EasySocialModelPages extends EasySocialModel
 		static $_cache = array();
 
 		if (!isset($_cache[$userId])) {
-			$invitedPage = $this->getPages(array('invited' => $userId));
+
+			$options = array('invited' => $userId, 'types' => 'user');
+			$invitedPage = $this->getPages($options);
 			$total = count($invitedPage);
 			$_cache[$userId] = $total;
 		}

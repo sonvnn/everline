@@ -574,7 +574,7 @@ class SocialFieldsUserAddress extends SocialFieldItem
 	 */
 	public function onFriendSuggestSearch($user, $userFieldData)
 	{
-		// Get the value
+		// Get the address value
 		$data = $this->getAddressValue($userFieldData);
 
 		if (empty($data->city) || empty($data->state) || empty($data->country)) {

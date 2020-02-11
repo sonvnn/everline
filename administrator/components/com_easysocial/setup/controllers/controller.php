@@ -269,11 +269,13 @@ class EasySocialSetupController
 		$verifiedColumnSql = "ALTER TABLE `#__social_users` ADD `verified` TINYINT(3) NOT NULL DEFAULT '0'";
 		$paramColumnSql = "ALTER TABLE `#__social_users` ADD `social_params` LONGTEXT NOT NULL";
 		$affiliationColumnSql = "ALTER TABLE `#__social_users` ADD `affiliation_id` VARCHAR(32) NOT NULL AFTER `verified`";
+		$robotsColumnSql = "ALTER TABLE `#__social_users` ADD COLUMN `robots` VARCHAR(16) DEFAULT 'inherit'";
 
 		$columns = array(
 			'verified' => $verifiedColumnSql,
 			'social_params' => $paramColumnSql,
-			'affiliation_id' => $affiliationColumnSql
+			'affiliation_id' => $affiliationColumnSql,
+			'robots' => $robotsColumnSql
 		);
 
 		$query = "SHOW FIELDS FROM `#__social_users`";

@@ -30,8 +30,8 @@ defined('_JEXEC') or die('Unauthorized Access');
 	<div data-mod-dating-search-item class="o-form-group">
 		<label><?php echo JText::_('MOD_EASYSOCIAL_DATING_SEARCH_GENDER_TITLE');?></label>
 		<div class="o-radio">
-			<input type="radio" id="item-radio-gender0" name="search-gender" value="0" <?php echo ($fieldGender->data == "0") ? 'checked="checked"' : ''; ?> data-gender-radio />
-			<label for="item-radio-gender0">
+			<input type="radio" id="item-radio-gender<?php echo $module->id . '.0' ?>" name="search-gender" value="0" <?php echo ($fieldGender->data == "0") ? 'checked="checked"' : ''; ?> data-gender-radio />
+			<label for="item-radio-gender<?php echo $module->id . '.0' ?>">
 				<?php echo JText::_('MOD_EASYSOCIAL_DATING_SEARCH_GENDER_ALL'); ?>
 			</label>
 		</div>
@@ -39,8 +39,8 @@ defined('_JEXEC') or die('Unauthorized Access');
 		<?php if ($fieldGenderOptions) { ?>
 			<?php foreach ($fieldGenderOptions as $option) { ?>
 				<div class="o-radio">
-					<input type="radio" id="item-radio-gender<?php echo $option->value; ?>" name="search-gender" value="<?php echo $option->value; ?>" <?php echo ($fieldGender->data == $option->value) ? 'checked="checked"' : ''; ?> data-gender-radio />
-					<label for="item-radio-gender<?php echo $option->value; ?>">
+					<input type="radio" id="item-radio-gender<?php echo $module->id . '.' . $option->value; ?>" name="search-gender" value="<?php echo $option->value; ?>" <?php echo ($fieldGender->data == $option->value) ? 'checked="checked"' : ''; ?> data-gender-radio />
+					<label for="item-radio-gender<?php echo $module->id . '.' . $option->value; ?>">
 						<?php echo JText::_($option->title); ?>
 					</label>
 				</div>
@@ -61,8 +61,8 @@ defined('_JEXEC') or die('Unauthorized Access');
 		<?php if ($fieldRelationshipeOptions) { ?>
 			<?php foreach ($fieldRelationshipeOptions as $option) { ?>
 				<div class="o-radio">
-					<input type="radio" id="item-radio-relationship<?php echo $option->value; ?>" name="search-relationship" value="<?php echo $option->value; ?>" <?php echo ($fieldRelationship->data == $option->value) ? 'checked="checked"' : ''; ?> data-relationship-radio />
-					<label for="item-radio-relationship<?php echo $option->value; ?>">
+					<input type="radio" id="item-radio-relationship<?php echo $module->id . '.' . $option->value; ?>" name="search-relationship" value="<?php echo $option->value; ?>" <?php echo ($fieldRelationship->data == $option->value) ? 'checked="checked"' : ''; ?> data-relationship-radio />
+					<label for="item-radio-relationship<?php echo $module->id . '.' . $option->value; ?>">
 						<?php echo JText::_($option->title); ?>
 					</label>
 				</div>

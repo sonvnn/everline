@@ -279,7 +279,7 @@ class SocialUserAppArticle extends SocialAppItem
 
 		// Added initial slashes if the image is hosted locally. #3443
 		if (JString::stristr($image, 'https://') === false && JString::stristr($image, 'http://') === false && !empty($image)) {
-			$image = '/' . ltrim($image, '/');
+			$image = rtrim(JURI::root(), '/') . '/' . ltrim($image, '/');
 		}
 
 		return $image;
@@ -696,7 +696,8 @@ class SocialUserAppArticle extends SocialAppItem
 
 		$permalink = $comment->getPermalink();
 
-		$commentContent = ES::string()->parseEmoticons($comment->comment);
+		$parseBBCodeOptions = array('escape' => false, 'links' => true, 'code' => true);
+		$commentContent = ES::string()->normalizeContent($comment->comment, $parseBBCodeOptions);
 
 		$emailOptions = array(
 			'title' => 'APP_USER_ARTICLE_EMAILS_COMMENT_ITEM_TITLE',

@@ -1,7 +1,7 @@
 <?php
 /**
 * @package		EasySocial
-* @copyright	Copyright (C) 2010 - 2014 Stack Ideas Sdn Bhd. All rights reserved.
+* @copyright	Copyright (C) 2010 - 2020 Stack Ideas Sdn Bhd. All rights reserved.
 * @license		GNU/GPL, see LICENSE.php
 * EasySocial is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
@@ -153,27 +153,27 @@ class SocialExplorerHookEvent extends SocialExplorerHooks
 	 */
 	public function removeFolder($id = null)
 	{
-		// Check if the user has access to delete files from this group
-		if (!$this->event->isMember() && !$this->my->isSiteAdmin()) {
-			return FD::exception( JText::_( 'COM_EASYSOCIAL_EXPLORER_NO_ACCESS_TO_DELETE_FOLDER' ) );
-		}
-
 		$id = is_null($id) ? $this->input->get('id', 0, 'int') : $id;
 
 		if (!$id) {
-			return FD::exception(JText::_('COM_EASYSOCIAL_EXPLORER_INVALID_FOLDER_ID_PROVIDED'));
+			return ES::exception(JText::_('COM_EASYSOCIAL_EXPLORER_INVALID_FOLDER_ID_PROVIDED'));
 		}
 
 		// Load up the files collection
-		$collection = FD::table('FileCollection');
+		$collection = ES::table('FileCollection');
 		$collection->load($id);
+
+		// Check if the user has access to delete files from this group
+		if (!$this->hasDeleteFolderAccess($collection)) {
+			return ES::exception( JText::_( 'COM_EASYSOCIAL_EXPLORER_NO_ACCESS_TO_DELETE_FOLDER' ) );
+		}
 
 		// Try to delete the folder
 		if (!$collection->delete()) {
-			return FD::exception($collection->getError());
+			return ES::exception($collection->getError());
 		}
 
-		return FD::exception(JText::_('COM_EASYSOCIAL_EXPLORER_FOLDER_DELETED_SUCCESS'), SOCIAL_MSG_SUCCESS);
+		return ES::exception(JText::_('COM_EASYSOCIAL_EXPLORER_FOLDER_DELETED_SUCCESS'), SOCIAL_MSG_SUCCESS);
 	}
 
 	/**
@@ -185,14 +185,9 @@ class SocialExplorerHookEvent extends SocialExplorerHooks
 	 */
 	public function removeFile()
 	{
-		// Check if the user has access to delete files from this group
-		if (!$this->event->isMember() && !$this->my->isSiteAdmin()) {
-			return FD::exception(JText::_('COM_EASYSOCIAL_EXPLORER_NO_ACCESS_TO_DELETE'));
-		}
-
 		// Get the file id
-		$ids 	= JRequest::getVar('id');
-		$ids 	= FD::makeArray($ids);
+		$ids = JRequest::getVar('id');
+		$ids = ES::makeArray($ids);
 
 		if (!$ids) {
 			return array();
@@ -200,17 +195,22 @@ class SocialExplorerHookEvent extends SocialExplorerHooks
 		
 		foreach ($ids as $id) {
 
-			$file = FD::table('File');
+			$file = ES::table('File');
 			$file->load($id);
 
 			if (!$id || !$file->id) {
-				return FD::exception( JText::_( 'COM_EASYSOCIAL_EXPLORER_INVALID_FILE_ID_PROVIDED' ) );
+				return ES::exception( JText::_( 'COM_EASYSOCIAL_EXPLORER_INVALID_FILE_ID_PROVIDED' ) );
+			}
+
+			// Check if the user has access to delete this file from this event
+			if (!$this->hasDeleteAccess($file)) {
+				return ES::exception(JText::_('COM_EASYSOCIAL_EXPLORER_NO_ACCESS_TO_DELETE'));
 			}
 
 			$state 	= $file->delete();
 
 			if (!$state) {
-				return FD::exception(JText::_($file->getError()));
+				return ES::exception(JText::_($file->getError()));
 			}
 		}
 

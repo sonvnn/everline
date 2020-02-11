@@ -87,6 +87,15 @@ class SocialSubscriptions extends EasySocial
 			return false;
 		}
 
+		// apply flood control here.
+		// if subscribe being called from friends lib, we do not need to check for flood control.
+		// when currentViewerId is not null, most likley is called from friend lib.
+
+		if (!$this->app->isAdmin() && is_null($currentViewerId) && !$this->canSubscribe($currentViewer->id)) {
+			$this->setError('COM_ES_FOLLOWERS_NOT_ALLOWED');
+			return false;
+		}
+
 		// Determine if the current user is already a follower
 		$subscribed = $this->isSubscribed($uid, $type, $group, $currentViewerId);
 
@@ -148,6 +157,46 @@ class SocialSubscriptions extends EasySocial
 
 		// Notify the target
 		$state = ES::notify('profile.followed' , array($user->id), $emailOptions, array('url' => $currentViewer->getPermalink(false, false, false), 'actor_id' => $currentViewer->id , 'uid' => $uid));
+
+		return true;
+	}
+
+	/**
+	 * Allows caller to unsubscribe from an object
+	 *
+	 * @since	2.0
+	 * @access	public
+	 */
+	public function canSubscribe($userId)
+	{
+		// in seconds
+		$config = ES::config();
+		$second_limit = (int) $config->get('followers.flood.limit', 0);
+
+		if ($second_limit <= 0) {
+			// flood control disabled.
+			return true;
+		}
+
+		$db = ES::db();
+		$now = ES::date()->toSql();
+
+		// apply flod control here.
+		$query = "select `id`, TIMESTAMPDIFF(SECOND, `created`, " . $db->Quote($now) . ") as secdiff";
+		$query .= " from `#__social_subscriptions`";
+		$query .= " where `user_id` = " . $db->Quote($userId);
+		$query .= " order by `id` desc limit 1";
+
+		$db->setQuery($query);
+		$result = $db->loadObject();
+
+		if ($result && $result->id) {
+			$prev = $result->secdiff;
+
+			if ($prev <= $second_limit) {
+				return false;
+			}
+		}
 
 		return true;
 	}

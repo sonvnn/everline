@@ -58,7 +58,11 @@ class EasySocialViewVideos extends EasySocialSiteView
 			return $this->ajax->reject($video->getError());
 		}
 
-		return $this->ajax->resolve($video->table);
+		$result = new stdClass();
+		$result->id = $video->table->id;
+		$result->title = $video->table->title;
+
+		return $this->ajax->resolve($result);
 	}
 
 	/**

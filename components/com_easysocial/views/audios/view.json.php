@@ -32,8 +32,16 @@ class EasySocialViewAudios extends EasySocialSiteView
 			return $this->json->send($response);
 		}
 
+		$audioData = new stdClass();
+		$audioData->id = $audio->table->id;
+		$audioData->title = $audio->table->title;
+		$audioData->description = $audio->table->description;
+		$audioData->link = '';
+		$audioData->artist = $audio->table->artist;
+		$audioData->artist = $audio->table->album;
+
 		$response->error = false;
-		$response->data = $audio->export();
+		$response->data = $audioData;
 		$response->thumbnail = $audio->getAlbumArt();
 		$response->html = $audio->getEmbedCodes();
 

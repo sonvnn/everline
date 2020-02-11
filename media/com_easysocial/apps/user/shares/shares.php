@@ -352,6 +352,15 @@ class SocialUserAppShares extends SocialAppItem
 			return;
 		}
 
+		// Get the repost helper
+		$helper = $this->getHelper($item, $share);
+		$preview = $helper->getContent();
+
+		// If the content is a false, there could be privacy restrictions.
+		if ($preview === false) {
+			return;
+		}
+
 		// We want the likes and comments to be associated with the "stream" rather than the shared item
 		$item->likes = ES::likes($item->contextId , $item->context, $item->verb, SOCIAL_APPS_GROUP_USER, $item->uid);
 		$item->comments = ES::comments($item->contextId , $item->context , $item->verb, SOCIAL_APPS_GROUP_USER , array('url' => $item->getPermalink(false, false, false)), $item->uid);

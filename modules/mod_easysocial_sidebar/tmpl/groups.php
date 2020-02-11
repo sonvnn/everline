@@ -46,6 +46,7 @@ defined('_JEXEC') or die('Unauthorized Access');
 							<div class="o-loader o-loader--sm"></div>
 						</li>
 					<?php } else { ?>
+						<?php if ($user->canCreateGroups() ) { ?>
 						<li class="o-tabs__item has-notice <?php echo $filter == 'created' && !$activeCategory ? ' active' : '';?>" data-filter-item data-type="created">
 							<a href="<?php echo $filters->created;?>" title="<?php echo JText::_('COM_ES_GROUPS_FILTER_CREATED_GROUPS' , true);?>" class="o-tabs__link">
 								<?php echo JText::_('COM_ES_GROUPS_FILTER_CREATED_GROUPS');?>
@@ -54,6 +55,7 @@ defined('_JEXEC') or die('Unauthorized Access');
 							<span class="o-tabs__bubble" data-counter><?php echo $counter->totalCreatedGroups;?></span>
 							<div class="o-loader o-loader--sm"></div>
 						</li>
+						<?php } ?>
 
 						<li class="o-tabs__item has-notice <?php echo $filter == 'participated' && !$activeCategory ? ' active' : '';?>" data-filter-item data-type="participated">
 							<a href="<?php echo $filters->participated;?>" title="<?php echo JText::_('COM_ES_GROUPS_FILTER_PARTICIPATED_GROUPS' , true);?>" class="o-tabs__link">
@@ -75,6 +77,7 @@ defined('_JEXEC') or die('Unauthorized Access');
 							<div class="o-loader o-loader--sm"></div>
 						</li>
 
+						<?php if ($user->isViewer() && $this->lib->my->canCreateGroups()) { ?>
 						<li class="o-tabs__item has-notice <?php echo $filter == 'created' && !$activeCategory ? ' active' : '';?>" data-filter-item data-type="created">
 							<a href="<?php echo $filters->created;?>" title="<?php echo JText::_('COM_EASYSOCIAL_PAGE_TITLE_GROUPS_FILTER_MY_CREATED_GROUPS' , true);?>" class="o-tabs__link">
 								<?php echo JText::_('COM_EASYSOCIAL_GROUPS_FILTER_MY_CREATED_GROUPS');?>
@@ -83,7 +86,7 @@ defined('_JEXEC') or die('Unauthorized Access');
 							<span class="o-tabs__bubble" data-counter><?php echo $counter->totalCreatedGroups;?></span>
 							<div class="o-loader o-loader--sm"></div>
 						</li>
-
+						<?php } ?>
 					<?php } ?>
 
 					<?php if ($filtersAcl->pending) { ?>

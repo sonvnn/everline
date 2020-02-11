@@ -48,9 +48,13 @@ class SocialUserAppStoryHookNotificationComments
 		// Convert the names to stream-ish
 		$names = ES::string()->namesToNotifications($users);
 
-		// Load the comment object since we have the context_ids
-		$comment = ES::table('Comments');
-		$comment->load($item->context_ids);
+		// If content doesnt exists, we get the content from the comment directly.
+		if (!isset($item->content) || !$item->content) {
+			$comment = ES::table('Comments');
+			$comment->load($item->context_ids);
+
+			$item->content = $comment->comment;
+		}
 
 		// When user likes on an album or a group of photos from an album on the stream
 		if ($item->context_type == 'story.user.create') {
@@ -59,7 +63,9 @@ class SocialUserAppStoryHookNotificationComments
 			$stream->load($item->uid);
 
 			if (count($users) == 1) {
-				$item->content = ES::string()->processEmoWithTruncate($comment->comment);
+				$item->content = ES::string()->processEmoWithTruncate($item->content);
+			} else {
+				$item->content = '';
 			}
 
 			// We need to determine if the user is the owner

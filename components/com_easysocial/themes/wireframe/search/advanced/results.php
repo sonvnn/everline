@@ -13,9 +13,7 @@ defined('_JEXEC') or die('Unauthorized Access');
 ?>
 <div class="es-list" data-result>
 	<?php foreach ($results as $item) { ?>
-		<div class="es-list__item">
-			<?php echo $this->html('listing.' . $item->getType(), $item); ?>
-		</div>
+		<?php echo $this->html('listing.' . $item->getType(), $item); ?>
 	<?php } ?>
 </div>
 

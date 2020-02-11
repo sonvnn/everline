@@ -287,13 +287,17 @@ class SocialTableNotification extends SocialTable
 			}
 		}
 
-		if (isset($notification['userOverride'])) {
-			$notification['user'] = $notification['userOverride'];
-			unset($notification['userOverride']);
-		}
+		if (isset($notification['alias']) && $notification['alias']) {
+			$notification['user'] = $notification['alias']->toExportData($viewer);
+		} else {
+			if (isset($notification['userOverride'])) {
+				$notification['user'] = $notification['userOverride'];
+				unset($notification['userOverride']);
+			}
 
-		if (isset($notification['user'])) {
-			$notification['user'] = ES::user($notification['user']->id)->toExportData($viewer);
+			if (isset($notification['user'])) {
+				$notification['user'] = ES::user($notification['user']->id)->toExportData($viewer);
+			}
 		}
 
 		// update image path to be absolute

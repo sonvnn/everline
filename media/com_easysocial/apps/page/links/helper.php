@@ -1,7 +1,7 @@
 <?php
 /**
 * @package      EasySocial
-* @copyright    Copyright (C) 2010 - 2016 Stack Ideas Sdn Bhd. All rights reserved.
+* @copyright    Copyright (C) 2010 - 2020 Stack Ideas Sdn Bhd. All rights reserved.
 * @license      GNU/GPL, see LICENSE.php
 * EasySocial is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
@@ -13,11 +13,6 @@ defined('_JEXEC') or die('Unauthorized Access');
 
 class PageLinksHelper
 {
-	public function __construct()
-	{
-		parent::__construct();
-	}
-
 	/**
 	 * Processes videos
 	 *

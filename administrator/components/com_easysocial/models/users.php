@@ -1,7 +1,7 @@
 <?php
 /**
 * @package		EasySocial
-* @copyright	Copyright (C) 2010 - 2019 Stack Ideas Sdn Bhd. All rights reserved.
+* @copyright	Copyright (C) 2010 - 2020 Stack Ideas Sdn Bhd. All rights reserved.
 * @license		GNU/GPL, see LICENSE.php
 * EasySocial is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
@@ -1033,11 +1033,13 @@ class EasySocialModelUsers extends EasySocialModel
 	 */
 	public function getSiteAdmins($idOnly = false)
 	{
-		static $cache = null;
+        // Instead of using 'static $cache = null;' because trying to use values of type null, bool, int, float or resource as an array will always generate a notice in PHP 7.4. #3727
+        // source: https://www.php.net/manual/de/migration74.incompatible.php#migration74.incompatible.core.non-array-access
+		static $cache = array();
 
 		$idx = (int) $idOnly;
 
-		if (is_null($cache[$idx])) {
+		if (!isset($cache[$idx]) || empty($cache[$idx])) {
 			$db = ES::db();
 			$sql = $db->sql();
 

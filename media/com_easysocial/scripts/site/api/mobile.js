@@ -54,6 +54,13 @@ if (window.es.mobile) {
 				return;
 			}
 		});
+
+		var filterButton = $('[data-filter-item]');
+
+		// Fix issue with page unable to scroll when filter is clicked. #3757
+		filterButton.on('click', function(event) {
+			$('body').trigger('hide.bs.dropdown');
+		});
 	})
 }
 

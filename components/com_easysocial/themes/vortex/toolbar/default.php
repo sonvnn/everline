@@ -468,7 +468,7 @@ defined('_JEXEC') or die('Unauthorized Access');
 											</div>
 										</div>
 										<div class="o-col">
-											<button class="btn btn-es-primary t-lg-pull-right"><?php echo JText::_('COM_EASYSOCIAL_LOGIN_BUTTON');?></button>
+											<button class="btn btn-es-primary t-lg-pull-right" data-login-submit><?php echo JText::_('COM_EASYSOCIAL_LOGIN_BUTTON');?></button>
 										</div>
 									</div>
 

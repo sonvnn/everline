@@ -49,20 +49,20 @@ defined('_JEXEC') or die('Unauthorized Access');
 
 								<?php if ($field->element == 'boolean') { ?>
 									<div class="o-select-group">
-										<select name="<?php echo $field->element;?>" id="<?php echo $field->element;?>" class="o-form-control" data-dropdown-field>
+										<select name="<?php echo $field->element;?>" id="<?php echo $module->id . '.' . $field->element;?>" class="o-form-control" data-dropdown-field>
 											<option value=""><?php echo JText::_('PLG_FIELDS_DROPDOWN_SELECT_A_VALUE') ?></option>
 											<option value="1" <?php echo $field->data == '1' ? 'selected' : ''; ?>><?php echo JText::_('COM_EASYSOCIAL_YES'); ?></option>
 											<option value="0" <?php echo $field->data == '0' ? 'selected' : ''; ?>><?php echo JText::_('COM_EASYSOCIAL_NO'); ?></option>
 
 										</select>
-										<label for="<?php echo $field->element;?>" class="o-select-group__drop"></label>
+										<label for="<?php echo $module->id . '.' . $field->element;?>" class="o-select-group__drop"></label>
 									</div>
 								<?php } ?>
 
 								<?php if ($field->element == 'dropdown') { ?>
 									<div class="o-select-group">
 										<select name="<?php echo $field->element;?>" id="<?php echo $field->element;?>" class="o-form-control" data-dropdown-field>
-											<option value=""><?php echo JText::_($placeholder) ?></option>
+											<option value=""><?php echo JText::_($field->placeholder) ?></option>
 											<?php foreach ($field->options as $option) { ?>
 												<option value="<?php echo ES::string()->escape($option->value);?>" <?php echo $option->value == $field->data ? 'selected' : ''; ?>><?php echo $option->title; ?></option>
 											<?php } ?>
@@ -76,8 +76,8 @@ defined('_JEXEC') or die('Unauthorized Access');
 									<?php foreach ($field->options as $option) { ?>
 										<div class="t-lg-mt--sm">
 											<div class="o-checkbox">
-												<input type="checkbox" id="<?php echo $option->value;?>" name="<?php echo $field->element;?>" value="<?php echo ES::string()->escape($option->value);?>" <?php echo in_array($option->value, $field->checkedItems) ? 'checked' : ''; ?> data-checkbox-option />
-												<label for="<?php echo $option->value;?>"><?php echo JText::_($option->title);?></label>
+												<input type="checkbox" id="<?php echo $module->id . '.' . $option->value;?>" name="<?php echo $field->element;?>" value="<?php echo ES::string()->escape($option->value);?>" <?php echo in_array($option->value, $field->checkedItems) ? 'checked' : ''; ?> data-checkbox-option />
+												<label for="<?php echo $module->id . '.' . $option->value;?>"><?php echo JText::_($option->title);?></label>
 											</div>
 										</div>
 										<?php $i++; ?>
@@ -88,7 +88,7 @@ defined('_JEXEC') or die('Unauthorized Access');
 					</div>
 					<input class="o-form-control" type="hidden" value="<?php echo $field->unique_key;?>|<?php echo $field->element;?>" name="criterias[]" data-criterias />
 					<input class="o-form-control" type="hidden" value="" name="datakeys[]" data-datakeys />
-					<input class="o-form-control" type="hidden" value="<?php echo $filterMode; ?>" name="operators[]" data-operators />
+					<input class="o-form-control" type="hidden" value="<?php echo EasySocialModCustomFieldSearchHelper::normalizeOperator($field->element, $filterMode); ?>" name="operators[]" data-operators />
 					<input class="o-form-control" type="hidden" value="<?php echo $field->data;?>" name="conditions[]" data-condition />
 				</div>
 			<?php } ?>
@@ -106,6 +106,8 @@ defined('_JEXEC') or die('Unauthorized Access');
 		<input type="hidden" name="view" value="search" />
 		<input type="hidden" name="layout" value="advanced" />
 		<input type="hidden" name="type" value="<?php echo $type; ?>" />
+		<input type="hidden" name="matchType" value="any" />
+		<input type="hidden" name="modid" value="<?php echo $module->id ?>" />
 
 		<?php if ($type == 'user') { ?>
 			<input type="hidden" name="profile" value="<?php echo $params->get('profile_id', 0); ?>" />

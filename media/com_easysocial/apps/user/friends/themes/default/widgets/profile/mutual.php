@@ -16,11 +16,11 @@ defined('_JEXEC') or die('Unauthorized Access');
 
 	<div class="es-side-widget__bd">
 		<?php echo $this->html('widget.users', $friends, 'APP_FRIENDS_WIDGET_PROFILE_NO_MUTUAL_FRIENDS'); ?>
-
-		<?php if ($friends) { ?>
-		<div>
-			<?php echo $this->html('widget.viewAll', 'COM_ES_VIEW_ALL', ESR::friends(array('userid' => $user->getAlias(), 'filter' => 'mutual'))); ?>
-		</div>
-		<?php } ?>
 	</div>
+	
+	<?php if ($friends) { ?>
+	<div class="es-side-widget__ft">
+		<?php echo $this->html('widget.viewAll', 'COM_ES_VIEW_ALL', ESR::friends(array('userid' => $user->getAlias(), 'filter' => 'mutual'))); ?>
+	</div>
+	<?php } ?>
 </div>

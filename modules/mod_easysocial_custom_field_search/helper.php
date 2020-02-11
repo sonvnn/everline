@@ -1,7 +1,7 @@
 <?php
 /**
 * @package		EasySocial
-* @copyright	Copyright (C) 2010 - 2014 Stack Ideas Sdn Bhd. All rights reserved.
+* @copyright	Copyright (C) 2010 - 2020 Stack Ideas Sdn Bhd. All rights reserved.
 * @license		GNU/GPL, see LICENSE.php
 * EasySocial is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
@@ -15,24 +15,17 @@ class EasySocialModCustomFieldSearchHelper
 {
 	public static function getFields(&$params)
 	{
-		$db = ES::db();
-		$sql = $db->sql();
+		$group = $params->get('searchtype', SOCIAL_TYPE_USER);
+		$uid = $group == SOCIAL_TYPE_USER ? (int) $params->get('profile_id', 0) : (int) $params->get($group . '_category', 0);
 
-		static $fields = null;
+		static $data = array();
 
-		if (!$fields) {
+		$idx = $group . '-' . $uid;
+
+		if (!isset($data[$idx]) || !$data[$idx]) {
 			// later we need to respect the module settings.
 			$elements = array('dropdown','checkbox', 'boolean');
-			$group = $params->get('searchtype', SOCIAL_TYPE_USER);
-
-			$fieldStepType = 'profiles';
-			$uid = $params->get('profile_id', 0);
-
-			if ($group != SOCIAL_TYPE_USER) {
-				$fieldStepType = 'clusters';
-				$uid = (int) $params->get($group . '_category', 0);
-			}
-
+			
 			$fieldStepType = $group == SOCIAL_TYPE_USER ? 'profiles' : 'clusters';
 
 			$db = ES::db();
@@ -81,10 +74,12 @@ class EasySocialModCustomFieldSearchHelper
 					$fields[] = $field;
 					// $fields[$result->element] = $result;
 				}
+
+				$data[$idx] = $fields;
 			}
 		}
 
-		return $fields;
+		return $data[$idx];
 	}
 
 	/**
@@ -105,5 +100,20 @@ class EasySocialModCustomFieldSearchHelper
 		$db->setQuery($sql);
 
 		return $db->loadObjectList();
+	}
+
+	/**
+	 * Get the title and value for the field options
+	 *
+	 * @since   3.0
+	 * @access  public
+	 */
+	public static function normalizeOperator($element, $filterMode)
+	{
+		if ($element == 'checkbox') {
+			return $filterMode == 'equal' ? 'contain' : 'notcontain';
+		}
+
+		return $filterMode;
 	}
 }

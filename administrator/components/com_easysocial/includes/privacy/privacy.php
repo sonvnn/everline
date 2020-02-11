@@ -1,7 +1,7 @@
 <?php
 /**
 * @package      EasySocial
-* @copyright    Copyright (C) 2010 - 2018 Stack Ideas Sdn Bhd. All rights reserved.
+* @copyright    Copyright (C) 2010 - 2020 Stack Ideas Sdn Bhd. All rights reserved.
 * @license      GNU/GPL, see LICENSE.php
 * EasySocial is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
@@ -486,15 +486,13 @@ class SocialPrivacy extends EasySocial
 			$rule = 'view';
 		}
 
-		$check = $data[$key][$rule];
-
-		if (empty($check)) {
+		if (empty($data[$key][$rule])) {
 			// no privacy at all ?!
 			// just return 0
 			return 0;
 		}
 
-		$options 	= (array) $data[$key][$rule]->options;
+		$options = (array) $data[$key][$rule]->options;
 
 		// We only want to get the items that are checked.
 		// Since the options value only contains 0 or 1.

@@ -69,16 +69,6 @@ class SocialLikes extends EasySocial
 	 */
 	public function canReact()
 	{
-		// Site admins should always be allowed to react
-		if (ES::isSiteAdmin()) {
-			return true;
-		}
-
-		if ($this->element == 'comments') {
-			// for now we let it pass
-			return true;
-		}
-
 		// if there is a stream id, lets use it.
 		if ($this->stream_id) {
 
@@ -87,13 +77,33 @@ class SocialLikes extends EasySocial
 
 			if ($streamTable->id && (!$streamTable->isModerated() && !$streamTable->isTrashed())) {
 				$items = ES::stream()->getItem($streamTable->id, $streamTable->cluster_id, $streamTable->cluster_type, false, array('perspective' => 'dashboard'));
+
 				if ($items && is_array($items)) {
-					return true;
+					// now we need to check if the item is belong to this stream or not. #3732
+					$streamItem = $items[0];
+
+					// check if this stream allow to 'reaction' or not.
+					if ($streamItem->likes instanceof SocialLikes) {
+						$streamLikeLib = $streamItem->likes;
+						if ($streamLikeLib->uid == $this->uid && $streamLikeLib->element == $this->element && $streamLikeLib->group == $this->group) {
+							return true;
+						}
+					}
 				}
 
 				// if stream lib return non array data, mean this user cannot view the stream
 				return false;
 			}
+		}
+
+		// Site admins should always be allowed to react
+		if (ES::isSiteAdmin()) {
+			return true;
+		}
+
+		if ($this->element == 'comments') {
+			// for now we let it pass
+			return true;
 		}
 
 		// no stream id. lets fall back to check the item's privacy / access

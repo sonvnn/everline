@@ -1336,11 +1336,11 @@ class EasySocialControllerEvents extends EasySocialController
 			return $this->view->call(__FUNCTION__);
 		}
 
-		$state = $event->promoteMember($uid);
+		$state = $event->promoteUser($uid);
 
 		if (!$state) {
 			$this->view->setMessage('COM_EASYSOCIAL_EVENTS_NO_ACCESS_TO_EVENT', ES_ERROR);
-			return $this->view->call(__FUNCTION__);
+			return $this->view->call(__FUNCTION__, $event);
 		}
 
 		$this->view->setMessage(JText::sprintf('COM_EASYSOCIAL_EVENTS_GUEST_PROMOTE_SUCCESS', ES::user($uid)->getName()), SOCIAL_MSG_SUCCESS);

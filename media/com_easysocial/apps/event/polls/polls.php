@@ -444,7 +444,8 @@ class SocialEventAppPolls extends SocialAppItem
 
 		$event = ES::event($polls->cluster_id);
 
-		$commentContent = ES::string()->parseEmoticons($comment->comment);
+		$parseBBCodeOptions = array('escape' => false, 'links' => true, 'code' => true);
+		$commentContent = ES::string()->normalizeContent($comment->comment, $parseBBCodeOptions);
 
 		// Prepare the email params
 		$mailParams = array();

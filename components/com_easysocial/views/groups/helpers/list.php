@@ -190,7 +190,11 @@ class EasySocialViewGroupsListHelper extends EasySocial
 		if (is_null($filter)) {
 			// If we are viewing profile's page listing
 			// Default the $filter to 'created'
-			$filter = $this->isBrowseView() ? 'all' : 'created';
+			if ($this->getActiveUser()->canCreateGroups()) { 
+				$filter = $this->isBrowseView() ? 'all' : 'created';
+			} else {
+				$filter = $this->isBrowseView() ? 'all' : 'participated';
+			}
 		}
 
 		return $filter;

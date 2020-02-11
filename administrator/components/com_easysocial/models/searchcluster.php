@@ -259,7 +259,7 @@ class EasySocialModelSearchCluster extends EasySocialModel
 			return '';
 		}
 
-		$filterCount = count($options['criterias']);
+		$filterCount = $options['criterias'] ? count($options['criterias']) : 0;
 		$clusterType = $options['clusterType'];
 
 		// current viewing user.
@@ -365,7 +365,7 @@ class EasySocialModelSearchCluster extends EasySocialModel
 
 		$queries = array();
 		$oQueries = array();
-		$filterCount = count($options['criterias']);
+		$filterCount = $options['criterias'] ? count($options['criterias']) : 0;
 		$clusterType = $options['clusterType'];
 
 		$lib = ES::advancedsearch($clusterType);

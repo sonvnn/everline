@@ -5679,6 +5679,10 @@ class SocialUser extends JUser
 		$respondFriend = 0;
 		$canFriend = 1;
 		$canMessage = 1;
+		$canViewProfile = 1;
+		$canPostStory = 1;
+		$canViewFriend = 1;
+		$canViewFollower = 1;
 
 		if ($viewer->id != $this->id) {
 
@@ -5693,16 +5697,47 @@ class SocialUser extends JUser
 				}
 			}
 
-			// Ensure that the current viewer is really allowed to add the target as friends
-			$privacy = $viewer->getPrivacy();
+			$viewerPrivacy = $viewer->getPrivacy();
 
-			if (!$privacy->validate('friends.request', $this->id)) {
+			// Ensure that the current viewer is really allowed to add the target as friends
+			if (!$viewerPrivacy->validate('friends.request', $this->id)) {
 				$canFriend = 0;
 			}
 
-			if (!$privacy->validate('profiles.post.message', $this->id)) {
+			if (!$viewerPrivacy->validate('profiles.post.message', $this->id)) {
 				$canMessage = 0;
 			}
+
+			if (!$viewerPrivacy->validate('profiles.view', $this->id)) {
+				$canViewProfile = 0;
+			}
+
+			if (!$viewerPrivacy->validate('profiles.post.status', $this->id)) {
+				$canPostStory = 0;
+			}
+
+			if (!$viewerPrivacy->validate('friends.view', $this->id)) {
+				$canViewFriend = 0;
+			}
+
+			if (!$viewerPrivacy->validate('profiles.post.status', $this->id)) {
+				$canViewFollower = 0;
+			}
+		}
+
+		$totalFriends = 0;
+		$totalMutualFriends = 0;
+		$totalFollowing = 0;
+		$totalFollowers = 0;
+
+		if ($canViewFriend) {
+			$totalFriends = $this->getTotalFriends();
+			$totalMutualFriends = $this->getTotalMutualFriends($viewer->id);
+		}
+
+		if ($canViewFollower) {
+			$totalFollowing = $this->getTotalFollowing();
+			$totalFollowers = $this->getTotalFollowers();
 		}
 
 		$result = array(
@@ -5718,17 +5753,18 @@ class SocialUser extends JUser
 			'lastLoggedin' => $this->lastvisitDate,
 			'isFollowed' => $this->isFollowed($viewer->id),
 			'isBlocked' => $this->isBlockedBy($viewer->id),
-			'totalFriends' => $this->getTotalFriends(),
-			'totalMutualFriends' => $this->getTotalMutualFriends($viewer->id),
-			'totalFollowing' => $this->getTotalFollowing(),
-			'totalFollowers' => $this->getTotalFollowers(),
+			'totalFriends' => $totalFriends,
+			'totalMutualFriends' => $totalMutualFriends,
+			'totalFollowing' => $totalFollowing,
+			'totalFollowers' => $totalFollowers,
 			'points' => array(
 				'total' => $this->getPoints()
 			),
 			'viewer' => $this->id == $viewer->id,
 			'avatar' => array(
 				'thumbnail' => $this->getAvatar(),
-				'large' => $this->getAvatar(SOCIAL_AVATAR_LARGE)
+				'large' => $this->getAvatar(SOCIAL_AVATAR_LARGE),
+				'original' => $this->getAvatarPhoto() ? $this->getAvatarPhoto()->getSource('large') : false
 			),
 			'cover' => array(
 				'large' => $this->getCover()
@@ -5738,9 +5774,14 @@ class SocialUser extends JUser
 			'objectType' => SOCIAL_TYPE_USER,
 			'isSiteAdmin' => $this->isSiteAdmin(),
 			'isFriend' => $isFriend,
+			'isOnline' => $this->isOnline(),
 			'canFriend' => $canFriend,
 			'respondFriend' => $respondFriend,
 			'canMessage' => $canMessage,
+			'canViewProfile' => $canViewProfile,
+			'canPostStory' => $canPostStory,
+			'canViewFriend' => $canViewFriend,
+			'canViewFollower' => $canViewFollower,
 			'permalink' => $this->getPermalink(true, true)
 		);
 
@@ -5827,7 +5868,8 @@ class SocialUser extends JUser
 		}
 
 		// Prepare DISPLAY custom fields
-		if ($includeFields) {
+		if ($includeFields && $canViewProfile) {
+
 			ES::language()->loadAdmin();
 
 			$stepsModel = ES::model('Steps');

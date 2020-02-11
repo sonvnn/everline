@@ -927,6 +927,15 @@ class ESR
 				}
 			}
 
+			// check for single menu item for a cluster when the layout is edit #3719
+			if (in_array($view, array('groups', 'events', 'pages')) && $layout  && $layout == 'edit') {
+				$menus = ESR::getMenus($view, 'item', $id, false, true, $lang);
+
+				if (!$menuId && $menus) {
+					$menuId = $menus[0]->id;
+				}
+			}
+
 			// Try to locate menu with just the view if we still can't find a menu id.
 			$menus = ESR::getMenus($view, '', '', false, true, $lang);
 
@@ -1058,11 +1067,19 @@ class ESR
 			}
 		}
 
+		// if no view in the segment. let check for the current active menu item.
 		if (!$viewExists && $active) {
 
-			// If there is no view in the segments, we treat it that the user
-			// has created a menu item on the site.
-			$view = $active->query['view'];
+			$cQuery = $active->query;
+
+			$view = $cQuery['view'];
+			$layout = isset($cQuery['layout']) ? $cQuery['layout'] : '';
+			$id = isset($cQuery['id']) ? $cQuery['id'] : 0;
+
+			// check if this is the single cluster menu item or not. #3719
+			if (in_array($view, array('groups', 'events', 'pages')) && ($layout && $layout == 'item') && $id) {
+				$viewExists = true;
+			}
 
 			// Check if the alias of the albums menu is changed to 'photos' #2474
 			if ($view == 'albums' && $active->alias == 'photos') {
@@ -1075,8 +1092,24 @@ class ESR
 				// Probably it trying to load a photos
 				if (!$album->id) {
 					$view = 'photos';
+					$viewExists = true;
 				}
 			}
+
+			if ($viewExists) {
+				// Add the view to the top of the element
+				array_unshift($segments, $view);
+			}
+
+		}
+
+
+		if (!$viewExists && $active) {
+
+			// If there is no view in the segments, we treat it that the user
+			// has created a menu item on the site.
+			$view = $active->query['view'];
+
 
 			// assume the 1st segment is user permalink, but we will verify at later.
 			$userPermalink = $segments[0];

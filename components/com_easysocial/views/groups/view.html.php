@@ -265,7 +265,7 @@ class EasySocialViewGroups extends EasySocialSiteView
 		$pagination = $model->getPagination();
 
 		if (!$browseView && $userid) {
-			$user = ES::User($userid);
+			$user = ES::user($userid);
 			$pagination->setVar('userid', $user->getAlias());
 		}
 

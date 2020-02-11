@@ -1,7 +1,7 @@
 <?php
 /**
 * @package		EasySocial
-* @copyright	Copyright (C) 2010 - 2017 Stack Ideas Sdn Bhd. All rights reserved.
+* @copyright	Copyright (C) 2010 - 2020 Stack Ideas Sdn Bhd. All rights reserved.
 * @license		GNU/GPL, see LICENSE.php
 * EasySocial is free software. This version may have been modified pursuant
 * to the GNU General Public License, and as distributed it includes or
@@ -184,8 +184,12 @@ class EasySocialViewApps extends EasySocialSiteView
 			}
 
 			if ($group->isClosed() && !$group->isMember()) {
+				$label = 'COM_ES_VIEW_RESTRICTED_PAGE';
+				$text = 'COM_ES_PAGES_PRIVACY_NOT_ALLOWED';
 				// Display private info
-				$this->set('group' , $group);
+				$this->set('node', $group);
+				$this->set('label', $label);
+				$this->set('text', $text);
 				parent::display('site/groups/restricted/default');
 				return false;
 			}
