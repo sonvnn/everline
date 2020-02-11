@@ -20,14 +20,14 @@ $useDefList = ($params->get('show_modify_date') || $params->get('show_publish_da
 $document = JFactory::getDocument();
 // Post Format
 $post_attribs = new JRegistry(json_decode($this->item->attribs));
-$post_format = $post_attribs->get('astroid_article_type', 'standard');
+$post_format = $post_attribs->get('astroid_article_type', 'regular');
 ?>
 <?php if ($this->item->state == 0 || strtotime($this->item->publish_up) > strtotime(JFactory::getDate()) || ((strtotime($this->item->publish_down) < strtotime(JFactory::getDate())) && $this->item->publish_down != JFactory::getDbo()->getNullDate())) :
    ?>
    <div class="system-unpublished">
    <?php endif; ?>
    <?php
-   if ($post_format == 'standard') {
+   if ($post_format == 'regular') {
       echo JLayoutHelper::render('joomla.content.intro_image', $this->item);
    } else {
        echo '<div class="post '.$post_format.'">';

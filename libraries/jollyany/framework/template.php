@@ -11,8 +11,10 @@ jimport('jollyany.framework.helper');
 jimport('astroid.framework.element');
 
 class JollyanyFrameworkTemplate extends AstroidFrameworkTemplate{
+    public $id;
 	public function __construct($template) {
 		parent::__construct($template);
+		$this->id   =   $template->id;
 	}
 
 	public function loadLayout($partial = '', $display = true, $params = null) {
@@ -109,9 +111,8 @@ class JollyanyFrameworkTemplate extends AstroidFrameworkTemplate{
             if (!empty($issetPreset)) {
                 $prefix = 'preset-';
             }
-
             $template_dir = JPATH_SITE . '/templates/' . $this->template . '/css';
-            if (!file_exists($template_dir . '/' . $prefix . $version . '.css')) {
+            if (!file_exists($template_dir . '/' . $prefix .$this->id . $version . '.css')) {
                 if (empty($issetPreset)) {
                     JollyanyFrameworkHelper::clearCache($this->template, 'jollyany');
                 }
@@ -122,10 +123,10 @@ class JollyanyFrameworkTemplate extends AstroidFrameworkTemplate{
                         unlink($template_dir . '/' . $style);
                     }
                 }
-                file_put_contents($template_dir . '/' . $prefix . $version . '.css', $css);
+                file_put_contents($template_dir . '/' . $prefix . $this->id . $version . '.css', $css);
             }
         }
         $document = JFactory::getDocument();
-        $document->addStyleSheet(JURI::root() . 'templates/' . $this->template . '/css/' . $prefix . $version . '.css');
+        $document->addStyleSheet(JURI::root() . 'templates/' . $this->template . '/css/' . $prefix .$this->id . $version . '.css');
     }
 }
