@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+   <fields name="params">
+      <fieldset icon="fa fa-font" label="ASTROID_OPTIONS_TYPOGRAPHY" name="astroid_typography" addfieldpath="/libraries/astroid/framework/fields" order="5">
+         <field type="astroidgroup" name="slider_typography_group" title="TPL_ASTROID_TYPOGRAPHY_SLIDER" description="TPL_ASTROID_TYPOGRAPHY_SLIDER_DESC" />
+
+         <!-- Slider Typography Options -->
+         <field astroidgroup="slider_typography_group" description="TPL_ASTROID_TYPOGRAPHY_OPTION_DESC" name="slider_typography" type="astroidradio" default="inherit" label="TPL_ASTROID_TYPOGRAPHY_OPTIONS_LABEL">
+            <option value="inherit">JGLOBAL_INHERIT</option>
+            <option value="custom">TPL_ASTROID_OPTIONS_CUSTOM</option>
+         </field>
+
+         <field astroidgroup="slider_typography_group" ngShow="slider_typography=='custom'" name="slider_typography_options" type="astroidtypography" font-style-picker="false" font-face="Arial, Helvetica, sans-serif" alt-font-face="Arial, Helvetica, sans-serif" font-color="#000" font-size="0.7" font-unit="em" letter-spacing="0" line-height="1" font-weight="500" text-transform="none"></field>
+
+         </fieldset>
+   </fields>
+</form>

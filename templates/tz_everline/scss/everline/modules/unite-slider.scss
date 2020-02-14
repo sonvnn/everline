@@ -1,6 +1,9 @@
 // Unite Slider
 @import "../../../../../libraries/jollyany/framework/scss/jollyany/modules/unite-slider";
 .tp-caption {
+  a {
+    color: inherit !important;
+  }
   .btn-slider-white {
     background-color: $white;
     color: $dark;
