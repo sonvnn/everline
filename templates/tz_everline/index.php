@@ -29,6 +29,9 @@ $this->setHtml5(true);
 // Add stylesheets
 JHtml::_('stylesheet', 'templates/system/css/system.css', array('version' => 'auto'));
 
+// Add font helper
+AstroidTemplateHelper::slider_font($template);
+
 // Astroid Assets
 $template->loadTemplateCSS('custom.css');
 $template->_loadFontAwesome();
